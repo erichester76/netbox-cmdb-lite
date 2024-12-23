@@ -16,6 +16,9 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     model_form = forms.GenericObjectTypeForm
+    
+class GenericObjectDetailView(generic.ObjectView):
+    queryset = models.GenericObjectType.objects.all()
 
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
@@ -28,6 +31,9 @@ class RelationshipTypeListView(generic.ObjectListView):
 class RelationshipTypeEditView(generic.ObjectEditView):
     queryset = models.RelationshipType.objects.all()
     model_form = forms.RelationshipTypeForm
+
+class RelationshipTypeDetailView(generic.ObjectView):
+    queryset = models.RelationshipType.objects.all()
 
 class RelationshipTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.RelationshipType.objects.all()
@@ -44,6 +50,9 @@ def object_type_attributes(request, pk):
 class GenericObjectListView(generic.ObjectListView):
     queryset = models.GenericObject.objects.all()
     table = tables.GenericObjectTable
+
+class GenericObjectDetailView(generic.ObjectView):
+    queryset = models.GenericObject.objects.all()
 
 class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
@@ -62,6 +71,9 @@ class GenericObjectDeleteView(generic.ObjectDeleteView):
 class GenericRelationshipListView(generic.ObjectListView):
     queryset = models.GenericRelationship.objects.all()
     table = tables.GenericRelationshipTable
+
+class GenericRelationshipDetailView(generic.ObjectView):
+    queryset = models.GenericRelationship.objects.all()
 
 class GenericRelationshipEditView(generic.ObjectEditView):
     queryset = models.GenericRelationship.objects.all()
