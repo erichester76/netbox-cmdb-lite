@@ -1,15 +1,10 @@
 from netbox.api.routers import NetBoxRouter
-from .views import (
-    ObjectTypeViewSet,
-    GenericObjectViewSet,
-    RelationshipTypeViewSet,
-    GenericRelationshipViewSet,
-)
+from . import views
 
 router = NetBoxRouter()
-router.register('object-types', ObjectTypeViewSet)
-router.register('generic-objects', GenericObjectViewSet)
-router.register('relationship-types', RelationshipTypeViewSet)
-router.register('generic-relationships', GenericRelationshipViewSet)
+router.register('object-types', views.GenericObjectTypeViewSet)
+router.register('generic-objects', views.GenericObjectViewSet)
+router.register('relationship-types', views.RelationshipTypeViewSet)
+router.register('generic-relationships', views.GenericRelationshipViewSet)
 
 urlpatterns = router.urls

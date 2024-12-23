@@ -1,24 +1,19 @@
 from netbox.api.viewsets import NetBoxModelViewSet
-from ..models import ObjectType, GenericObject, RelationshipType, GenericRelationship
-from .serializers import (
-    ObjectTypeSerializer,
-    GenericObjectSerializer,
-    RelationshipTypeSerializer,
-    GenericRelationshipSerializer,
-)
+from .. import models
+from . import serializers
 
-class ObjectTypeViewSet(NetBoxModelViewSet):
-    queryset = ObjectType.objects.all()
-    serializer_class = ObjectTypeSerializer
+class GenericObjectTypeViewSet(NetBoxModelViewSet):
+    queryset = models.GenericObjectType.objects.all()
+    serializer_class = serializers.ObjectTypeSerializer
 
 class GenericObjectViewSet(NetBoxModelViewSet):
-    queryset = GenericObject.objects.all()
-    serializer_class = GenericObjectSerializer
+    queryset = models.GenericObject.objects.all()
+    serializer_class = serializers.GenericObjectSerializer
 
 class RelationshipTypeViewSet(NetBoxModelViewSet):
-    queryset = RelationshipType.objects.all()
-    serializer_class = RelationshipTypeSerializer
+    queryset = models.RelationshipType.objects.all()
+    serializer_class = serializers.RelationshipTypeSerializer
 
 class GenericRelationshipViewSet(NetBoxModelViewSet):
-    queryset = GenericRelationship.objects.all()
-    serializer_class = GenericRelationshipSerializer
+    queryset = models.GenericRelationship.objects.all()
+    serializer_class = serializers.GenericRelationshipSerializer
