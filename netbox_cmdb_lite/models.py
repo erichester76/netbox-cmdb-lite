@@ -12,7 +12,7 @@ class GenericObjectType(NetBoxModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:generic_object_type", args=[self.pk])
+        return reverse("plugins:netbox_cmdb_lite:generic_object_type", kwargs={'pk': self.pk})
 
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
@@ -23,7 +23,7 @@ class GenericObject(NetBoxModel):
         return f"{self.name} ({self.object_type.name})"
     
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:generic_object", args=[self.pk])
+        return reverse("plugins:netbox_cmdb_lite:generic_object",  kwargs={'pk': self.pk})
 
 class RelationshipType(NetBoxModel):
     name = models.CharField(max_length=50, unique=True)
@@ -33,7 +33,7 @@ class RelationshipType(NetBoxModel):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:relationship_type", args=[self.pk])
+        return reverse("plugins:netbox_cmdb_lite:relationship_type", kwargs={'pk': self.pk})
     
 class GenericRelationship(NetBoxModel):
     source_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="source_relationships")
@@ -53,4 +53,4 @@ class GenericRelationship(NetBoxModel):
         return f"{self.source} ({source_type}) -> {self.target} ({target_type}) ({self.relationship_type})"
 
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:generic_relationship", args=[self.pk])
+        return reverse("plugins:netbox_cmdb_lite:generic_relationship", kwargs={'pk': self.pk})
