@@ -1,9 +1,9 @@
 from netbox.forms import NetBoxModelForm
+from django.contrib.contenttypes.models import ContentType
 from django import forms
-import models
 import jsonschema
 from jsonschema.exceptions import ValidationError
-from django.contrib.contenttypes.models import ContentType
+from . import models
 
 class ObjectTypeForm(NetBoxModelForm):
     class Meta:

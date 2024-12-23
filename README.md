@@ -12,7 +12,7 @@ NetBox CMDB Lite is a lightweight Configuration Management Database (CMDB) plugi
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/netbox_cmdb_lite.git
+    git clone https://github.com/clemson-netbox/netbox_cmdb_lite.git
     ```
 
 2. Install the plugin:

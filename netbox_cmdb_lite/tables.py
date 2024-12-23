@@ -1,6 +1,6 @@
 from netbox.tables import NetBoxTable
 import django_tables2 as tables
-import models
+from . import models
 
 class ObjectTypeTable(NetBoxTable):
     name = tables.Column(linkify=True)

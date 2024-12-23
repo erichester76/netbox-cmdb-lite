@@ -1,11 +1,11 @@
 from netbox.plugins import PluginMenuItem
-from .models import ObjectType
+from . import models
 
 def get_dynamic_menu_items():
     """
     Generate dynamic menu items based on ObjectType.
     """
-    object_types = ObjectType.objects.all()
+    object_types = models.ObjectType.objects.all()
     dynamic_menu_items = []
     for obj_type in object_types:
         dynamic_menu_items.append(

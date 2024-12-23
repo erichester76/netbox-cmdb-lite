@@ -1,7 +1,7 @@
 from netbox.views import NetBoxListView, NetBoxEditView, NetBoxDeleteView
-import models
-import tables
-import forms
+from . import models
+from . import tables
+from . import forms
 
 ###################################
 # Adjusted NetBox Plugin Views
