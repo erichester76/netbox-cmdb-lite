@@ -1,4 +1,4 @@
-from netbox.plugins import PluginMenuItem
+from netbox.plugins import PluginMenu, PluginMenuItem
 
 mgmt_items = [
         PluginMenuItem(
