@@ -26,7 +26,7 @@ mgmt_items = [
 # Define the top-level menu with icon
 menu = PluginMenu(
     label="CMDB Lite",
-    groups=(("Management", mgmt_items)),
+    groups=(("Management", mgmt_items),),
     icon_class="mdi mdi-server",
 )
 
