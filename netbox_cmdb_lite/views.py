@@ -2,6 +2,7 @@ from netbox.views import generic
 from . import models
 from . import tables
 from . import forms
+from django.http import JsonResponse
 
 ###################################
 # Adjusted generic.Object Plugin Views
@@ -37,6 +38,14 @@ class RelationshipTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.RelationshipType.objects.all()
     template_name = "relationships/relationship_type_delete.html"
 
+# ObjectType Attributes API
+def object_type_attributes(request, pk):
+    object_type = models.GenericObjectType.objects.filter(pk=pk).first()
+    if not object_type:
+        return JsonResponse({"error": "ObjectType not found."}, status=404)
+    attributes = object_type.attributes or {}
+    return JsonResponse({"attributes": attributes})
+
 # GenericObject Views
 class GenericObjectListView(generic.ObjectListView):
     queryset = models.GenericObject.objects.all()
@@ -47,6 +56,12 @@ class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
     model_form = forms.GenericObjectForm
     template_name = "generic_objects/generic_object_edit.html"
+
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        instance.metadata = form.cleaned_data.get("metadata", {})
+        instance.save()
+        return super().form_valid(form)
 
 class GenericObjectDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObject.objects.all()

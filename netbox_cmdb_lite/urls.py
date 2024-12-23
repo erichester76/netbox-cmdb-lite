@@ -7,6 +7,7 @@ urlpatterns = [
     path("object-types/add/", views.GenericObjectTypeEditView.as_view(), name="object_type_add"),
     path("object-types/<int:pk>/edit/", views.GenericObjectTypeEditView.as_view(), name="object_type_edit"),
     path("object-types/<int:pk>/delete/", views.GenericObjectTypeDeleteView.as_view(), name="object_type_delete"),
+    path("object-types/<int:pk>/attributes/", views.object_type_attributes, name="object_type_attributes"),
 
     # RelationshipType URLs
     path("relationship-types/", views.RelationshipTypeListView.as_view(), name="relationship_type_list"),

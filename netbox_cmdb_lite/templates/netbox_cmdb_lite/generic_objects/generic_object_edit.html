@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ object }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        {{ form.object_type }}
+    </div>
+    <div id="dynamic-metadata-container" class="form-group">
+        {{ form.metadata }}
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const objectTypeField = document.querySelector('#id_object_type');
+        const metadataField = document.querySelector('#id_metadata');
+
+        function updateMetadataField(objectTypeId) {
+            fetch(`/plugins/cmdb-lite/object-types/${objectTypeId}/attributes/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.attributes) {
+                        metadataField.value = JSON.stringify(data.attributes, null, 2);
+                    } else {
+                        metadataField.value = "{}";
+                    }
+                });
+        }
+
+        objectTypeField.addEventListener('change', function () {
+            if (this.value) {
+                updateMetadataField(this.value);
+            }
+        });
+
+        // Pre-load metadata if editing
+        if (objectTypeField.value) {
+            updateMetadataField(objectTypeField.value);
+        }
+    });
+</script>
+{% endblock %}
