@@ -5,9 +5,9 @@ import jsonschema
 from jsonschema.exceptions import ValidationError
 from . import models
 
-class ObjectTypeForm(NetBoxModelForm):
+class GenericObjectTypeForm(NetBoxModelForm):
     class Meta:
-        model = models.ObjectType
+        model = models.GenericObjectType
         fields = ["name", "attributes"]
 
 class GenericObjectForm(NetBoxModelForm):

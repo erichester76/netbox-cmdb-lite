@@ -2,11 +2,11 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    # ObjectType URLs
-    path("object-types/", views.ObjectTypeListView.as_view(), name="object_type_list"),
-    path("object-types/add/", views.ObjectTypeEditView.as_view(), name="object_type_add"),
-    path("object-types/<int:pk>/edit/", views.ObjectTypeEditView.as_view(), name="object_type_edit"),
-    path("object-types/<int:pk>/delete/", views.ObjectTypeDeleteView.as_view(), name="object_type_delete"),
+    # GenericObjectType URLs
+    path("object-types/", views.GenericObjectTypeListView.as_view(), name="object_type_list"),
+    path("object-types/add/", views.GenericObjectTypeEditView.as_view(), name="object_type_add"),
+    path("object-types/<int:pk>/edit/", views.GenericObjectTypeEditView.as_view(), name="object_type_edit"),
+    path("object-types/<int:pk>/delete/", views.GenericObjectTypeDeleteView.as_view(), name="object_type_delete"),
 
     # RelationshipType URLs
     path("relationship-types/", views.RelationshipTypeListView.as_view(), name="relationship_type_list"),

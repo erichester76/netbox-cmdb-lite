@@ -7,19 +7,19 @@ from . import forms
 # Adjusted generic.Object Plugin Views
 ###################################
 
-# ObjectType Views
-class ObjectTypeListView(generic.ObjectListView):
-    queryset = models.ObjectType.objects.all()
-    table = tables.ObjectTypeTable
+# GenericObjectType Views
+class GenericObjectTypeListView(generic.ObjectListView):
+    queryset = models.GenericObjectType.objects.all()
+    table = tables.GenericObjectTypeTable
     template_name = "object_types/object_type_list.html"
 
-class ObjectTypeEditView(generic.ObjectEditView):
-    queryset = models.ObjectType.objects.all()
-    model_form = forms.ObjectTypeForm
+class GenericObjectTypeEditView(generic.ObjectEditView):
+    queryset = models.GenericObjectType.objects.all()
+    model_form = forms.GenericObjectTypeForm
     template_name = "object_types/object_type_edit.html"
 
-class ObjectTypeDeleteView(generic.ObjectDeleteView):
-    queryset = models.ObjectType.objects.all()
+class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
+    queryset = models.GenericObjectType.objects.all()
     template_name = "object_types/object_type_delete.html"
 
 # RelationshipType Views

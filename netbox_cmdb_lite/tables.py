@@ -2,11 +2,11 @@ from netbox.tables import NetBoxTable
 import django_tables2 as tables
 from . import models
 
-class ObjectTypeTable(NetBoxTable):
+class GenericObjectTypeTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
-        model = models.ObjectType
+        model = models.GenericObjectType
         fields = ("pk", "name")
 
 class GenericObjectTable(NetBoxTable):

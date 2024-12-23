@@ -3,7 +3,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-class ObjectType(NetBoxModel):
+class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=50, unique=True)
     attributes = models.JSONField(blank=True, null=True)  # Define allowed attributes as JSON schema
 
@@ -12,7 +12,7 @@ class ObjectType(NetBoxModel):
 
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
-    object_type = models.ForeignKey(ObjectType, on_delete=models.CASCADE)
+    object_type = models.ForeignKey(GenericObjectType, on_delete=models.CASCADE)
     metadata = models.JSONField(blank=True, null=True)  # Store dynamic attributes
 
     def __str__(self):
