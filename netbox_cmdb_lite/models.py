@@ -1,5 +1,6 @@
 from netbox.models import NetBoxModel
 from django.db import models
+from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
@@ -10,6 +11,9 @@ class GenericObjectType(NetBoxModel):
     def __str__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_cmdb_lite:generic_object_type", args=[self.pk])
+
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
     object_type = models.ForeignKey(GenericObjectType, on_delete=models.CASCADE)
@@ -17,6 +21,9 @@ class GenericObject(NetBoxModel):
 
     def __str__(self):
         return f"{self.name} ({self.object_type.name})"
+    
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_cmdb_lite:generic_object", args=[self.pk])
 
 class RelationshipType(NetBoxModel):
     name = models.CharField(max_length=50, unique=True)
@@ -24,6 +31,9 @@ class RelationshipType(NetBoxModel):
 
     def __str__(self):
         return self.name
+    
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_cmdb_lite:relationship_type", args=[self.pk])
     
 class GenericRelationship(NetBoxModel):
     source_content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, related_name="source_relationships")
@@ -41,3 +51,6 @@ class GenericRelationship(NetBoxModel):
         source_type = getattr(self.source_content_type.model_class(), '__name__', 'Unknown')
         target_type = getattr(self.target_content_type.model_class(), '__name__', 'Unknown')
         return f"{self.source} ({source_type}) -> {self.target} ({target_type}) ({self.relationship_type})"
+
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_cmdb_lite:generic_relationship", args=[self.pk])
