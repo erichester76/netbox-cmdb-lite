@@ -2,7 +2,7 @@ from netbox.plugins import PluginMenu, PluginMenuItem
 
 mgmt_items = [
         PluginMenuItem(
-            link="plugins:netbox_cmdb_lite:object_type_list",
+            link="plugins:netbox_cmdb_lite:generic_object_type_list",
             link_text="Object Types",
             permissions=["cmdb_lite.view_objecttype"],
         ),

@@ -4,19 +4,19 @@ from .. import models
 class ObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
-        fields = ['id', 'name', 'attributes']
+        fields = '__all__'
 
 class GenericObjectSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObject
-        fields = ['id', 'name', 'object_type', 'metadata']
+        fields = '__all__'
 
 class RelationshipTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.RelationshipType
-        fields = ['id', 'name', 'description']
+        fields = '__all__'
 
 class GenericRelationshipSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericRelationship
-        fields = ['id', 'source_content_type', 'source_object_id', 'target_content_type', 'target_object_id', 'relationship_type', 'attributes']
+        fields = '__all__'
