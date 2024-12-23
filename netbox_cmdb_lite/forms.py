@@ -1,8 +1,8 @@
-from netbox.forms import NetBoxModelForm, DynamicModelChoiceField
+from netbox.forms import NetBoxModelForm
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from . import models
-from utilities.forms import  JSONField
+from utilities.forms import DynamicModelChoiceField, JSONField
 
 class GenericObjectTypeForm(NetBoxModelForm):
     class Meta:
