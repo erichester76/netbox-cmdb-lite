@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load render_table %}
+{% block content %}
+<h1>Generic Relationships</h1>
+<div>
+    {% render_table table %}
+</div>
+<a href="{% url 'generic_relationship_add' %}" class="btn btn-primary">Add Relationship</a>
+{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load render_table %}
+{% block content %}
+<h1>Generic Objects</h1>
+<div>
+    {% render_table table %}
+</div>
+<a href="{% url 'generic_object_add' %}" class="btn btn-primary">Add Generic Object</a>
+{% endblock %}
