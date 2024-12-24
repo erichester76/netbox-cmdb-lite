@@ -6,13 +6,12 @@ requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "netbox-certificcmdb-lite"
+name = "netbox-cmdb-lite"
 version = "0.1.0"
 authors = [
     { name = "Eric Hester", email = "hester1@clemson.edu" },
 ]
 description = "A lightweight CMDB plugin for NetBox."
-
 readme = "README.md"
 
 classifiers = [
@@ -44,7 +43,7 @@ Tracker = "https://github.com/erichester76/netbox-cmdb-lite/issues"
 
 [tool.black]
 line-length = 120
-target_version = ["py39", "py310", "py311", "py312"]
+target-version = ["py39", "py310", "py311", "py312"]
 
 [tool.setuptools.package-data]
 netbox_cmdb_lite = ["templates/**"]
