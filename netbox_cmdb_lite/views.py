@@ -16,7 +16,7 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
-    template_name = "generic/object_edit.html"  # Explicitly set the template path
+    #template_name = "generic/object_edit.html"  # Explicitly set the template path
      
 class GenericObjectDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
