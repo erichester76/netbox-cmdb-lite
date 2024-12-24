@@ -7,7 +7,7 @@ class GenericObjectTypeTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericObjectType
-        fields = ("pk", "name")
+        fields = ("pk", "name", "created", "last_updated", "actions")
 
 class GenericObjectTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -15,14 +15,14 @@ class GenericObjectTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericObject
-        fields = ("pk", "name", "object_type")
+        fields = ("pk", "name", "object_type", "created", "last_updated", "actions")
 
 class RelationshipTypeTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = models.RelationshipType
-        fields = ("pk", "name")
+        fields = ("pk", "name", "created", "last_updated", "actions")
 
 class GenericRelationshipTable(NetBoxTable):
     source = tables.Column(linkify=True)
@@ -31,4 +31,4 @@ class GenericRelationshipTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericRelationship
-        fields = ("pk", "source", "target", "relationship_type")
+        fields = ("pk", "source", "target", "relationship_type", "created", "last_updated", "actions")

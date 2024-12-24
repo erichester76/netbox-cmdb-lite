@@ -23,7 +23,7 @@ class GenericObject(NetBoxModel):
         return f"{self.name} ({self.object_type.name})"
     
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:generic_object",  kwargs={'pk': self.pk})
+        return reverse("plugins:netbox_cmdb_lite:generic_object", kwargs={'pk': self.pk})
 
 class RelationshipType(NetBoxModel):
     name = models.CharField(max_length=50, unique=True)
