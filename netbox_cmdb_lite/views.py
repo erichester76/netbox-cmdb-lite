@@ -16,7 +16,8 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
-     
+    template_name = "generic_object_type_edit.html"  # Explicitly set custom template
+
 class GenericObjectDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
 
