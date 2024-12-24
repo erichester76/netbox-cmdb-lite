@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from netbox.api.serializers import NetBoxModelSerializer
-from . import models 
+from .. import models 
 from django.contrib.contenttypes.models import ContentType
 
 # Serializer for GenericObjectType
