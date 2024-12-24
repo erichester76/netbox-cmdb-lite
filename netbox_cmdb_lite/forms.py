@@ -29,7 +29,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         
 class GenericObjectForm(NetBoxModelForm):
     object_type = forms.ModelChoiceField(
-        queryset=GenericObjectType.objects.all(),
+        queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
         help_text="Select an object type to load its attributes dynamically."
