@@ -15,7 +15,7 @@ class GenericObjectTypeListView(generic.ObjectListView):
 
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
-    model_form = forms.GenericObjectTypeForm
+    form = forms.GenericObjectTypeForm
     template_name = "generic/object_edit.html"  # Explicitly set the template path
      
 class GenericObjectDetailView(generic.ObjectView):
@@ -31,7 +31,8 @@ class RelationshipTypeListView(generic.ObjectListView):
 
 class RelationshipTypeEditView(generic.ObjectEditView):
     queryset = models.RelationshipType.objects.all()
-    model_form = forms.RelationshipTypeForm
+    form = forms.RelationshipTypeForm
+    template_name = "generic/object_edit.html"  # Explicitly set the template path
 
 class RelationshipTypeDetailView(generic.ObjectView):
     queryset = models.RelationshipType.objects.all()
@@ -57,7 +58,8 @@ class GenericObjectDetailView(generic.ObjectView):
 
 class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
-    model_form = forms.GenericObjectForm
+    form = forms.GenericObjectForm
+    template_name = "generic/object_edit.html"  # Explicitly set the template path
 
 class GenericObjectDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObject.objects.all()
@@ -72,7 +74,8 @@ class GenericRelationshipDetailView(generic.ObjectView):
 
 class GenericRelationshipEditView(generic.ObjectEditView):
     queryset = models.GenericRelationship.objects.all()
-    model_form = forms.RelationshipForm
+    form = forms.RelationshipForm
+    template_name = "generic/object_edit.html"  # Explicitly set the template path
 
 class GenericRelationshipDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericRelationship.objects.all()
