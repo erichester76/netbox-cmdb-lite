@@ -43,12 +43,7 @@ class GenericObjectForm(NetBoxModelForm):
         queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
-        help_text="Select an object type to load its attributes dynamically."
-    )
-    metadata = forms.JSONField(
-        label="Attributes",
-        required=False,
-        help_text="Enter values for the attributes defined in the selected object type."
+        help_text="Select an object type to load its dynamic attributes."
     )
 
     class Meta:
@@ -58,14 +53,57 @@ class GenericObjectForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         instance = kwargs.get("instance")
-        if instance and instance.object_type:
-            keys = instance.object_type.attributes
-            for key in keys:
-                self.fields[f"metadata_{key}"] = forms.CharField(
-                    label=key.capitalize(),
-                    required=False,
-                    initial=instance.metadata.get(key, "") if instance.metadata else ""
-                )
+        object_type = instance.object_type if instance else self.initial.get("object_type")
+
+        # Dynamically add fields for the attributes based on the object type
+        if object_type and object_type.attributes:
+            for attribute in object_type.attributes:
+                field_name = f"metadata_{attribute['name']}"
+                field_label = attribute["name"].capitalize()
+                field_type = attribute["type"]
+
+                if field_type == "string":
+                    self.fields[field_name] = forms.CharField(
+                        label=field_label,
+                        required=False,
+                        initial=instance.metadata.get(attribute["name"], "") if instance else ""
+                    )
+                elif field_type == "integer":
+                    self.fields[field_name] = forms.IntegerField(
+                        label=field_label,
+                        required=False,
+                        initial=instance.metadata.get(attribute["name"], 0) if instance else 0
+                    )
+                elif field_type == "boolean":
+                    self.fields[field_name] = forms.BooleanField(
+                        label=field_label,
+                        required=False,
+                        initial=instance.metadata.get(attribute["name"], False) if instance else False
+                    )
+                elif field_type == "multi-choice":
+                    # Multi-choice can be extended to dynamically load choices
+                    self.fields[field_name] = forms.ChoiceField(
+                        label=field_label,
+                        required=False,
+                        choices=[("option1", "Option 1"), ("option2", "Option 2")],
+                        initial=instance.metadata.get(attribute["name"], "option1") if instance else "option1"
+                    )
+
+    def clean(self):
+        """
+        Validate dynamic fields and save them into the metadata field.
+        """
+        cleaned_data = super().clean()
+        metadata = {}
+        if self.instance.object_type and self.instance.object_type.attributes:
+            for attribute in self.instance.object_type.attributes:
+                field_name = f"metadata_{attribute['name']}"
+                if field_name in cleaned_data:
+                    metadata[attribute["name"]] = cleaned_data[field_name]
+
+        cleaned_data["metadata"] = metadata
+        return cleaned_data
+
 
 class RelationshipTypeForm(NetBoxModelForm):
     class Meta:

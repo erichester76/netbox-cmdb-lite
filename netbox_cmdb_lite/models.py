@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-class GenericObjectType(models.Model):
+class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=100, unique=True)
     attributes = models.JSONField(
         default=list,
