@@ -8,7 +8,7 @@ class NetboxCmdbLiteConfig(PluginConfig):
     author = 'Eric Hester'
     author_email = 'hester1@clemson.edu'
     base_url = 'cmdb-lite'
-    templates_dir = 'netbox_cmdb_lite/templates'
+    templates_dirs = ['netbox_cmdb_lite/templates']
     required_settings = []
     default_settings = {}
 
