@@ -19,23 +19,24 @@ class GenericObjectTypeForm(NetBoxModelForm):
         model = models.GenericObjectType
         fields = ["name", "attributes"]
 
-    def clean_attributes(self):
-        """
-        Validate and clean the attributes field to ensure it contains valid JSON.
-        """
-        import json
-        attributes = self.cleaned_data.get("attributes", "[]")
-        try:
-            parsed_attributes = json.loads(attributes)
-            # Validate each attribute
-            for attr in parsed_attributes:
-                if not isinstance(attr, dict) or "name" not in attr or "type" not in attr:
-                    raise forms.ValidationError("Each attribute must include 'name' and 'type'.")
-                if attr["type"] not in ["string", "integer", "boolean", "multi-choice"]:
-                    raise forms.ValidationError(f"Invalid type '{attr['type']}' for attribute '{attr['name']}'.")
-            return parsed_attributes
-        except json.JSONDecodeError as e:
-            raise forms.ValidationError(f"Invalid JSON: {e}")
+def clean_attributes(self):
+    import json
+    attributes = self.cleaned_data.get("attributes", "[]")
+    try:
+        parsed_attributes = json.loads(attributes)
+        for attr in parsed_attributes:
+            if "type" not in attr or "name" not in attr:
+                raise forms.ValidationError("Each attribute must have a 'name' and 'type'.")
+            if attr["type"] == "multi-choice" and "options" in attr:
+                if not isinstance(attr["options"], list):
+                    raise forms.ValidationError(f"Options for '{attr['name']}' must be a list.")
+            if attr["type"] == "foreign-key" and "reference" in attr:
+                if not isinstance(attr["reference"], str):
+                    raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
+        return parsed_attributes
+    except json.JSONDecodeError as e:
+        raise forms.ValidationError(f"Invalid JSON: {e}")
+
 
         
 class GenericObjectForm(NetBoxModelForm):

@@ -15,7 +15,7 @@
     <div id="attributes-container" class="form-group">
         <label>Object Fields</label>
         <div>
-            <small class="form-text text-muted">Add one or more fields, including their type.</small>
+            <small class="form-text text-muted">Add one or more fields, including their type and optional settings.</small>
         </div>
         <!-- Attribute Rows -->
         <div id="attribute-rows">
@@ -35,22 +35,29 @@
     const container = document.getElementById("attribute-rows");
     const attributesField = document.getElementById("id_attributes");
 
-    function addAttribute(name = "", type = "string") {
+    function addAttribute(name = "", type = "string", options = [], reference = "") {
         const div = document.createElement("div");
         div.className = "form-row mb-2 align-items-center";
         div.innerHTML = `
-            <div class="col-sm-5">
+            <div class="col-sm-3">
                 <input type="text" class="form-control" placeholder="Field Name" value="${name}" />
             </div>
-            <div class="col-sm-4">
-                <select class="form-control">
+            <div class="col-sm-3">
+                <select class="form-control" onchange="handleTypeChange(this)">
                     <option value="string" ${type === "string" ? "selected" : ""}>String</option>
                     <option value="integer" ${type === "integer" ? "selected" : ""}>Integer</option>
                     <option value="boolean" ${type === "boolean" ? "selected" : ""}>Boolean</option>
                     <option value="multi-choice" ${type === "multi-choice" ? "selected" : ""}>Multi-Choice</option>
+                    <option value="foreign-key" ${type === "foreign-key" ? "selected" : ""}>Foreign Key</option>
                 </select>
             </div>
-            <div class="col-sm-2 text-right">
+            <div class="col-sm-3 type-options" ${type !== "multi-choice" ? "style='display:none;'" : ""}>
+                <input type="text" class="form-control" placeholder="Comma-separated options" value="${options.join(",")}" />
+            </div>
+            <div class="col-sm-3 type-reference" ${type !== "foreign-key" ? "style='display:none;'" : ""}>
+                <input type="text" class="form-control" placeholder="Reference (e.g., dcim.device)" value="${reference}" />
+            </div>
+            <div class="col-sm-1 text-right">
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeAttribute(this)">Remove</button>
             </div>
         `;
@@ -63,18 +70,47 @@
         updateAttributesField();
     }
 
+    function handleTypeChange(select) {
+        const row = select.parentElement.parentElement;
+        const optionsField = row.querySelector(".type-options");
+        const referenceField = row.querySelector(".type-reference");
+        
+        if (select.value === "multi-choice") {
+            optionsField.style.display = "";
+            referenceField.style.display = "none";
+        } else if (select.value === "foreign-key") {
+            optionsField.style.display = "none";
+            referenceField.style.display = "";
+        } else {
+            optionsField.style.display = "none";
+            referenceField.style.display = "none";
+        }
+        updateAttributesField();
+    }
+
     function updateAttributesField() {
         const attributes = [];
         container.querySelectorAll(".form-row").forEach(row => {
             const name = row.children[0].children[0].value.trim();
             const type = row.children[1].children[0].value;
-            if (name) attributes.push({ name, type });
+            const options = row.querySelector(".type-options input").value.split(",").map(opt => opt.trim()).filter(opt => opt);
+            const reference = row.querySelector(".type-reference input").value.trim();
+            
+            if (name) {
+                const attribute = { name, type };
+                if (type === "multi-choice") {
+                    attribute.options = options;
+                } else if (type === "foreign-key") {
+                    attribute.reference = reference;
+                }
+                attributes.push(attribute);
+            }
         });
         attributesField.value = JSON.stringify(attributes, null, 2);
     }
 
     // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");
-    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type));
+    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || [], attr.reference || ""));
 </script>
 {% endblock %}
