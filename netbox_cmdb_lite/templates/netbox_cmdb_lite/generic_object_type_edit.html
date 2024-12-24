@@ -4,7 +4,7 @@
     {% csrf_token %}
     <div class="form-group">
         <label for="id_name">Name</label>
-        {{ form.name|add_class:"form-control" }}
+        {{ form.name }}
     </div>
     <div id="attributes-container" class="form-group">
         <label>Object Fields</label>
