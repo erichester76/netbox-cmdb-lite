@@ -6,29 +6,26 @@
         <label for="id_name">Name</label>
         {{ form.name|add_class:"form-control" }}
     </div>
-    <div class="form-group">
-        <label for="id_attributes">Attributes</label>
-        <textarea id="id_attributes" name="attributes" class="form-control">{{ form.attributes.value }}</textarea>
-    </div>
     <div id="attributes-container" class="form-group">
-        <!-- Dynamic attributes will be injected here -->
+        <label>Object Fields</label>
+        <div>
+            <small class="form-text text-muted">Add one or more fields that define the structure of objects of this type.</small>
+        </div>
     </div>
-    <button type="button" class="btn btn-secondary" onclick="addAttribute()">Add Attribute</button>
+    <button type="button" class="btn btn-secondary mb-3" onclick="addAttribute()">Add Field</button>
+    <textarea id="id_attributes" name="attributes" hidden>{{ form.attributes.value }}</textarea>
     <button type="submit" class="btn btn-primary">Save</button>
 </form>
 <script>
     const container = document.getElementById("attributes-container");
     const attributesField = document.getElementById("id_attributes");
 
-    function addAttribute(key = "", value = "") {
+    function addAttribute(key = "") {
         const div = document.createElement("div");
-        div.className = "form-row";
+        div.className = "form-row mb-2";
         div.innerHTML = `
             <div class="col">
-                <input type="text" class="form-control" placeholder="Key" value="${key}" />
-            </div>
-            <div class="col">
-                <input type="text" class="form-control" placeholder="Value" value="${value}" />
+                <input type="text" class="form-control" placeholder="Field Name" value="${key}" />
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger" onclick="removeAttribute(this)">Remove</button>
@@ -44,17 +41,16 @@
     }
 
     function updateAttributesField() {
-        const attributes = {};
+        const attributes = [];
         container.querySelectorAll(".form-row").forEach(row => {
             const key = row.children[0].children[0].value.trim();
-            const value = row.children[1].children[0].value.trim();
-            if (key) attributes[key] = value;
+            if (key) attributes.push(key);
         });
         attributesField.value = JSON.stringify(attributes, null, 2);
     }
 
     // Initialize existing attributes
-    const initialAttributes = JSON.parse(attributesField.value || "{}");
-    Object.entries(initialAttributes).forEach(([key, value]) => addAttribute(key, value));
+    const initialAttributes = JSON.parse(attributesField.value || "[]");
+    initialAttributes.forEach(key => addAttribute(key));
 </script>
 {% endblock %}

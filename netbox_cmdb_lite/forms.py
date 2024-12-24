@@ -6,12 +6,13 @@ from utilities.forms.fields import DynamicModelChoiceField, JSONField
 
 class GenericObjectTypeForm(NetBoxModelForm):
     attributes = forms.CharField(
-        required=False,
         widget=forms.Textarea(attrs={
-            'rows': 5,
-            'placeholder': 'Enter attributes in JSON format or use the dynamic fields below.'
+            "class": "form-control",
+            "rows": 5,
+            "placeholder": "Enter one key per line"
         }),
-        label="Attributes (JSON)"
+        required=False,
+        label="Attributes (Keys)"
     )
 
     class Meta:
@@ -20,31 +21,40 @@ class GenericObjectTypeForm(NetBoxModelForm):
 
     def clean_attributes(self):
         """
-        Validate and clean the attributes field to ensure it contains valid JSON.
+        Validate and convert the input into a list of keys.
         """
-        import json
-        attributes = self.cleaned_data.get("attributes", "{}")
-        try:
-            return json.loads(attributes)
-        except json.JSONDecodeError as e:
-            raise forms.ValidationError(f"Invalid JSON: {e}")
+        attributes = self.cleaned_data.get("attributes", "")
+        # Split by lines and remove any empty entries
+        return [key.strip() for key in attributes.splitlines() if key.strip()]
         
 class GenericObjectForm(NetBoxModelForm):
-    object_type = DynamicModelChoiceField(
-        queryset=models.GenericObjectType.objects.all(),
+    object_type = forms.ModelChoiceField(
+        queryset=GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
-        help_text="Select an object type to load attributes dynamically."
+        help_text="Select an object type to load its attributes dynamically."
     )
-    metadata = JSONField(
+    metadata = forms.JSONField(
         label="Attributes",
         required=False,
-        help_text="Dynamic attributes based on the selected object type."
+        help_text="Enter values for the attributes defined in the selected object type."
     )
 
     class Meta:
         model = models.GenericObject
         fields = ["name", "object_type", "metadata"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        instance = kwargs.get("instance")
+        if instance and instance.object_type:
+            keys = instance.object_type.attributes
+            for key in keys:
+                self.fields[f"metadata_{key}"] = forms.CharField(
+                    label=key.capitalize(),
+                    required=False,
+                    initial=instance.metadata.get(key, "") if instance.metadata else ""
+                )
 
 class RelationshipTypeForm(NetBoxModelForm):
     class Meta:
