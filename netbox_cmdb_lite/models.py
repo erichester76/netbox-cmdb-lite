@@ -17,7 +17,7 @@ class GenericObjectType(NetBoxModel):
         return self.name
     
     def get_absolute_url(self):
-        return reverse("plugins:netbox_cmdb_lite:generic_object_type", kwargs={'pk': self.pk})
+        return reverse("plugins:netbox_cmdb_lite:genericobjecttype", kwargs={'pk': self.pk})
 
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
