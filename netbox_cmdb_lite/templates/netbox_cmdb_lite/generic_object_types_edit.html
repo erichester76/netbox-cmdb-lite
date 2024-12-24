@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{% if object %}Edit {% else %}Add {% endif %} Object Type</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Name</label>
+        {{ form.name }}
+    </div>
+    <div class="form-group">
+        <label>Attributes</label>
+        <div id="attributes-container">
+            <!-- Dynamic attributes will be injected here -->
+        </div>
+        <button type="button" onclick="addAttribute()">Add Attribute</button>
+    </div>
+    <textarea id="id_attributes" name="attributes" hidden>{{ form.attributes.value }}</textarea>
+    <button type="submit" class="btn btn-primary">Save</button>
+</form>
+<script>
+    const container = document.getElementById("attributes-container");
+    const attributesField = document.getElementById("id_attributes");
+
+    function addAttribute(key = "", value = "") {
+        const div = document.createElement("div");
+        div.className = "attribute-pair";
+        div.innerHTML = `
+            <input type="text" placeholder="Key" value="${key}" />
+            <input type="text" placeholder="Value" value="${value}" />
+            <button type="button" onclick="removeAttribute(this)">Remove</button>
+        `;
+        container.appendChild(div);
+        updateAttributesField();
+    }
+
+    function removeAttribute(button) {
+        button.parentElement.remove();
+        updateAttributesField();
+    }
+
+    function updateAttributesField() {
+        const attributes = {};
+        container.querySelectorAll(".attribute-pair").forEach(pair => {
+            const key = pair.children[0].value.trim();
+            const value = pair.children[1].value.trim();
+            if (key) attributes[key] = value;
+        });
+        attributesField.value = JSON.stringify(attributes, null, 2);
+    }
+
+    // Initialize existing attributes
+    const initialAttributes = JSON.parse(attributesField.value || "{}");
+    Object.entries(initialAttributes).forEach(([key, value]) => addAttribute(key, value));
+</script>
+{% endblock %}

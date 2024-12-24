@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% load render_table %}
-{% block content %}
-<h1>Object Types</h1>
-<div>
-    {% render_table table %}
-</div>
-<a href="{% url 'object_type_add' %}" class="btn btn-primary">Add Object Type</a>
-{% endblock %}

@@ -5,10 +5,30 @@ from . import models
 from utilities.forms.fields import DynamicModelChoiceField, JSONField
 
 class GenericObjectTypeForm(NetBoxModelForm):
+    attributes = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={
+            'rows': 5,
+            'placeholder': 'Enter attributes in JSON format or use the dynamic fields below.'
+        }),
+        label="Attributes (JSON)"
+    )
+
     class Meta:
         model = models.GenericObjectType
         fields = ["name", "attributes"]
 
+    def clean_attributes(self):
+        """
+        Validate and clean the attributes field to ensure it contains valid JSON.
+        """
+        import json
+        attributes = self.cleaned_data.get("attributes", "{}")
+        try:
+            return json.loads(attributes)
+        except json.JSONDecodeError as e:
+            raise forms.ValidationError(f"Invalid JSON: {e}")
+        
 class GenericObjectForm(NetBoxModelForm):
     object_type = DynamicModelChoiceField(
         queryset=models.GenericObjectType.objects.all(),

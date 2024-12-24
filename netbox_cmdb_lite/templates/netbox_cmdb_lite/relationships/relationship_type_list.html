@@ -1,9 +1,0 @@
-{% extends "base.html" %}
-{% load render_table %}
-{% block content %}
-<h1>Relationship Types</h1>
-<div>
-    {% render_table table %}
-</div>
-<a href="{% url 'relationship_type_add' %}" class="btn btn-primary">Add Relationship Type</a>
-{% endblock %}
