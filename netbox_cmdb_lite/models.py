@@ -22,8 +22,12 @@ class GenericObjectType(NetBoxModel):
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
     object_type = models.ForeignKey(GenericObjectType, on_delete=models.CASCADE)
-    metadata = models.JSONField(blank=True, null=True)  # Store dynamic attributes
-
+    metadata = models.JSONField(
+        default=dict,
+        blank=True,
+        null=True,
+        help_text="Values for the dynamic attributes defined by the object type."
+    )
     def __str__(self):
         return f"{self.name} ({self.object_type.name})"
     

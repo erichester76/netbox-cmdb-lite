@@ -1,7 +1,7 @@
 from netbox.api.serializers import NetBoxModelSerializer
 from .. import models
 
-class ObjectTypeSerializer(NetBoxModelSerializer):
+class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
         fields = '__all__'

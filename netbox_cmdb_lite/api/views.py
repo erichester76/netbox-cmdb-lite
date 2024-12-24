@@ -4,7 +4,7 @@ from . import serializers
 
 class GenericObjectTypeViewSet(NetBoxModelViewSet):
     queryset = models.GenericObjectType.objects.all()
-    serializer_class = serializers.ObjectTypeSerializer
+    serializer_class = serializers.GenericObjectTypeSerializer
 
 class GenericObjectViewSet(NetBoxModelViewSet):
     queryset = models.GenericObject.objects.all()
