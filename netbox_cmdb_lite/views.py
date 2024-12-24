@@ -16,7 +16,8 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     model_form = forms.GenericObjectTypeForm
-    
+    template_name = "generic/object_edit.html"  # Explicitly set the template path
+     
 class GenericObjectDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
 
@@ -57,12 +58,6 @@ class GenericObjectDetailView(generic.ObjectView):
 class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
     model_form = forms.GenericObjectForm
-
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.metadata = form.cleaned_data.get("metadata", {})
-        instance.save()
-        return super().form_valid(form)
 
 class GenericObjectDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObject.objects.all()
