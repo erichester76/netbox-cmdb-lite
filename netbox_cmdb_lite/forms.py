@@ -9,10 +9,10 @@ class GenericObjectTypeForm(NetBoxModelForm):
         widget=forms.Textarea(attrs={
             "class": "form-control",
             "rows": 5,
-            "placeholder": "Enter one key per line"
+            "placeholder": "Attributes will be populated dynamically using the UI below."
         }),
         required=False,
-        label="Attributes (Keys)"
+        label="Attributes (Dynamic)"
     )
 
     class Meta:
@@ -21,11 +21,22 @@ class GenericObjectTypeForm(NetBoxModelForm):
 
     def clean_attributes(self):
         """
-        Validate and convert the input into a list of keys.
+        Validate and clean the attributes field to ensure it contains valid JSON.
         """
-        attributes = self.cleaned_data.get("attributes", "")
-        # Split by lines and remove any empty entries
-        return [key.strip() for key in attributes.splitlines() if key.strip()]
+        import json
+        attributes = self.cleaned_data.get("attributes", "[]")
+        try:
+            parsed_attributes = json.loads(attributes)
+            # Validate each attribute
+            for attr in parsed_attributes:
+                if not isinstance(attr, dict) or "name" not in attr or "type" not in attr:
+                    raise forms.ValidationError("Each attribute must include 'name' and 'type'.")
+                if attr["type"] not in ["string", "integer", "boolean", "multi-choice"]:
+                    raise forms.ValidationError(f"Invalid type '{attr['type']}' for attribute '{attr['name']}'.")
+            return parsed_attributes
+        except json.JSONDecodeError as e:
+            raise forms.ValidationError(f"Invalid JSON: {e}")
+
         
 class GenericObjectForm(NetBoxModelForm):
     object_type = forms.ModelChoiceField(

@@ -4,13 +4,18 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-class GenericObjectType(NetBoxModel):
-    name = models.CharField(max_length=50, unique=True)
-    attributes = models.JSONField(blank=True, null=True)  # Define allowed attributes as JSON schema
+class GenericObjectType(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    attributes = models.JSONField(
+        default=list,
+        blank=True,
+        null=True,
+        help_text="Define the fields and their types for this object type."
+    )
 
     def __str__(self):
         return self.name
-
+    
     def get_absolute_url(self):
         return reverse("plugins:netbox_cmdb_lite:generic_object_type", kwargs={'pk': self.pk})
 

@@ -9,7 +9,7 @@
     <div id="attributes-container" class="form-group">
         <label>Object Fields</label>
         <div>
-            <small class="form-text text-muted">Add one or more fields that define the structure of objects of this type.</small>
+            <small class="form-text text-muted">Add one or more fields, including their type.</small>
         </div>
     </div>
     <button type="button" class="btn btn-secondary mb-3" onclick="addAttribute()">Add Field</button>
@@ -20,12 +20,20 @@
     const container = document.getElementById("attributes-container");
     const attributesField = document.getElementById("id_attributes");
 
-    function addAttribute(key = "") {
+    function addAttribute(name = "", type = "string") {
         const div = document.createElement("div");
         div.className = "form-row mb-2";
         div.innerHTML = `
             <div class="col">
-                <input type="text" class="form-control" placeholder="Field Name" value="${key}" />
+                <input type="text" class="form-control" placeholder="Field Name" value="${name}" />
+            </div>
+            <div class="col">
+                <select class="form-control">
+                    <option value="string" ${type === "string" ? "selected" : ""}>String</option>
+                    <option value="integer" ${type === "integer" ? "selected" : ""}>Integer</option>
+                    <option value="boolean" ${type === "boolean" ? "selected" : ""}>Boolean</option>
+                    <option value="multi-choice" ${type === "multi-choice" ? "selected" : ""}>Multi-Choice</option>
+                </select>
             </div>
             <div class="col-auto">
                 <button type="button" class="btn btn-danger" onclick="removeAttribute(this)">Remove</button>
@@ -43,14 +51,15 @@
     function updateAttributesField() {
         const attributes = [];
         container.querySelectorAll(".form-row").forEach(row => {
-            const key = row.children[0].children[0].value.trim();
-            if (key) attributes.push(key);
+            const name = row.children[0].children[0].value.trim();
+            const type = row.children[1].children[0].value;
+            if (name) attributes.push({ name, type });
         });
         attributesField.value = JSON.stringify(attributes, null, 2);
     }
 
     // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");
-    initialAttributes.forEach(key => addAttribute(key));
+    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type));
 </script>
 {% endblock %}
