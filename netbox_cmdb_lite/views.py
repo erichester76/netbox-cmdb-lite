@@ -18,7 +18,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
     form = forms.GenericObjectTypeForm
     template_name = "netbox_cmdb_lite/generic_object_type_edit.html"  
 
-class GenericObjectDetailView(generic.ObjectView):
+class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
 
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):

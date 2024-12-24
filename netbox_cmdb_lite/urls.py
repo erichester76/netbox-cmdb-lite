@@ -6,7 +6,7 @@ urlpatterns = [
     path("generic-object-types/", views.GenericObjectTypeListView.as_view(), name="generic_object_type_list"),
     path("generic-object-types/add/", views.GenericObjectTypeEditView.as_view(), name="generic_object_type_add"),
     path("generic-object-types/<int:pk>/edit/", views.GenericObjectTypeEditView.as_view(), name="generic_object_type_edit"),
-    path("generic-object-types/<int:pk>/", views.GenericObjectDetailView.as_view(), name="generic_object_type"),
+    path("generic-object-types/<int:pk>/", views.GenericObjectTypeDetailView.as_view(), name="generic_object_type"),
     path("generic-object-types/<int:pk>/delete/", views.GenericObjectTypeDeleteView.as_view(), name="generic_object_type_delete"),
     path("generic-object-types/<int:pk>/attributes/", views.object_type_attributes, name="generic_object_type_attributes"),
 
