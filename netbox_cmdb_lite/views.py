@@ -31,6 +31,8 @@ class GenericObjectTypeDetailView(generic.ObjectView):
         attributes = instance.attributes or []
         expanded_fields = []
         for attribute in attributes:
+            if isinstance(attribute, str):
+                attribute = json.loads(attribute)  # Deserialize if needed
             field_data = {
                 'name': attribute.get('name'),
                 'type': attribute.get('type'),
@@ -38,7 +40,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
                 'reference': attribute.get('reference') if attribute.get('type') == 'foreign-key' else None,
             }
             expanded_fields.append(field_data)
-
+            
         # Fetch related objects
         related_objects = models.GenericObject.objects.filter(object_type=instance)
 
