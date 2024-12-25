@@ -3,10 +3,7 @@ from . import models
 from . import tables
 from . import forms
 from django.http import JsonResponse
-
-###################################
-# Adjusted generic.Object Plugin Views
-###################################
+import json
 
 # GenericObjectType Views
 class GenericObjectTypeListView(generic.ObjectListView):
