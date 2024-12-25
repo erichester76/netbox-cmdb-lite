@@ -20,6 +20,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
+    template_name = "generic/object.html"
 
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
