@@ -6,42 +6,29 @@ from utilities.forms.fields import DynamicModelChoiceField, JSONField
 import json
 
 class GenericObjectTypeForm(NetBoxModelForm):
-    attributes = forms.CharField(
-        widget=forms.Textarea(attrs={
-            "class": "form-control",
-            "rows": 5,
-            "placeholder": "Attributes will be populated dynamically using the UI below."
-        }),
-        required=False,
-        label="Attributes (Dynamic)"
-    )
-
     class Meta:
         model = models.GenericObjectType
         fields = ["name", "attributes"]
 
 def clean_attributes(self):
-    import json
-    attributes = self.cleaned_data.get("attributes", "[]")
-    try:
-        # Parse the JSON string
-        parsed_attributes = json.loads(attributes)
+    attributes = self.cleaned_data.get("attributes", [])
 
-        # Validate the parsed attributes
-        for attr in parsed_attributes:
-            if "type" not in attr or "name" not in attr:
-                raise forms.ValidationError("Each attribute must have a 'name' and 'type'.")
-            if attr["type"] == "multi-choice" and "options" in attr:
-                if not isinstance(attr["options"], list):
-                    raise forms.ValidationError(f"Options for '{attr['name']}' must be a list.")
-            if attr["type"] == "foreign-key" and "reference" in attr:
-                if not isinstance(attr["reference"], str):
-                    raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
+    if not isinstance(attributes, list):
+        raise forms.ValidationError("Attributes must be a list of dictionaries.")
 
-        # Return the validated JSON (not stringified JSON)
-        return parsed_attributes
-    except json.JSONDecodeError as e:
-        raise forms.ValidationError(f"Invalid JSON: {e}")
+    for attr in attributes:
+        if not isinstance(attr, dict):
+            raise forms.ValidationError("Each attribute must be a dictionary.")
+        if "name" not in attr or "type" not in attr:
+            raise forms.ValidationError("Each attribute must have a 'name' and 'type'.")
+        if attr["type"] == "multi-choice" and "options" in attr:
+            if not isinstance(attr["options"], list):
+                raise forms.ValidationError(f"Options for '{attr['name']}' must be a list.")
+        if attr["type"] == "foreign-key" and "reference" in attr:
+            if not isinstance(attr["reference"], str):
+                raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
+    
+    return attributes
 
         
 class GenericObjectForm(NetBoxModelForm):

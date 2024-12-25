@@ -106,10 +106,8 @@
             attributes.push(attribute);
         }
     });
-    attributesField.value = JSON.stringify(attributes); // Ensure it's valid JSON
-    }
-
-  
+    attributesField.value = JSON.stringify(attributes); // Valid JSON
+    } 
 
     // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");
