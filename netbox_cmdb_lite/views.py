@@ -18,9 +18,49 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
     form = forms.GenericObjectTypeForm
     template_name = "netbox_cmdb_lite/generic_object_type_edit.html"  
 
-class GenericObjectTypeDetailView(generic.ObjectView):
+
+class GenericObjectTypeDetailView(generic.ObjectDetailView):
     queryset = models.GenericObjectType.objects.all()
-    template_name = "generic/object.html"
+    template_name = "netbox/object_detail.html"  
+
+    def get_extra_context(self, request, instance):
+        """
+        Preprocess attributes and related objects for display in the detail view.
+        """
+        # Expand the attributes field
+        attributes = instance.attributes or []
+        expanded_fields = []
+        for attribute in attributes:
+            field_data = {
+                'name': attribute.get('name'),
+                'type': attribute.get('type'),
+                'options': ', '.join(attribute.get('options', [])) if attribute.get('type') == 'multi-choice' else None,
+                'reference': attribute.get('reference') if attribute.get('type') == 'foreign-key' else None,
+            }
+            expanded_fields.append(field_data)
+
+        # Fetch related objects
+        related_objects = models.GenericObject.objects.filter(object_type=instance)
+
+        # Prepare NetBox-compatible fields
+        fields = [
+            ('Name', instance.name),
+            ('Created', instance.created),
+            ('Last Updated', instance.last_updated),
+            ('Attributes', expanded_fields),
+        ]
+
+        return {
+            'fields': fields,
+            'related_objects': {
+                'name': 'Related Objects',
+                'objects': related_objects,
+                'table': 'GenericObjectTable',
+                'edit_url_name': 'plugins:netbox_cmdb_lite:generic_object_edit',
+            },
+        }
+
+
 
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
