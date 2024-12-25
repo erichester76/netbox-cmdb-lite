@@ -19,7 +19,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
     template_name = "netbox_cmdb_lite/generic_object_type_edit.html"  
 
 
-class GenericObjectTypeDetailView(generic.ObjectDetailView):
+class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
     template_name = "netbox/object_detail.html"  
 
@@ -56,7 +56,7 @@ class GenericObjectTypeDetailView(generic.ObjectDetailView):
                 'name': 'Related Objects',
                 'objects': related_objects,
                 'table': 'GenericObjectTable',
-                'edit_url_name': 'plugins:netbox_cmdb_lite:generic_object_edit',
+                'edit_url_name': 'plugins:netbox_cmdb_lite:genericobject_edit',
             },
         }
 
