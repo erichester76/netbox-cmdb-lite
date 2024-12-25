@@ -89,25 +89,26 @@
     }
 
     function updateAttributesField() {
-        const attributes = [];
-        container.querySelectorAll(".form-row").forEach(row => {
-            const name = row.children[0].children[0].value.trim();
-            const type = row.children[1].children[0].value;
-            const options = row.querySelector(".type-options input").value.split(",").map(opt => opt.trim()).filter(opt => opt);
-            const reference = row.querySelector(".type-reference input").value.trim();
-            
-            if (name) {
-                const attribute = { name, type };
-                if (type === "multi-choice") {
-                    attribute.options = options;
-                } else if (type === "foreign-key") {
-                    attribute.reference = reference;
-                }
-                attributes.push(attribute);
+    const attributes = [];
+    container.querySelectorAll(".form-row").forEach(row => {
+        const name = row.children[0].children[0].value.trim();
+        const type = row.children[1].children[0].value;
+        const options = row.querySelector(".type-options input")?.value.split(",").map(opt => opt.trim()).filter(opt => opt) || [];
+        const reference = row.querySelector(".type-reference input")?.value.trim() || "";
+
+        if (name) {
+            const attribute = { name, type };
+            if (type === "multi-choice") {
+                attribute.options = options;
+            } else if (type === "foreign-key") {
+                attribute.reference = reference;
             }
-        });
-        attributesField.value = JSON.stringify(attributes, null, 2);
+            attributes.push(attribute);
+        }
+    });
+    attributesField.value = JSON.stringify(attributes); // Ensure JSON, not a string representation
     }
+  
 
     // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");

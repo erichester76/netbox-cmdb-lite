@@ -74,6 +74,17 @@ class RelationshipTypeEditView(generic.ObjectEditView):
     queryset = models.RelationshipType.objects.all()
     form = forms.RelationshipTypeForm
 
+    def form_valid(self, form):
+        instance = form.save(commit=False)
+        if isinstance(instance.attributes, str):
+            import json
+            try:
+                instance.attributes = json.loads(instance.attributes)
+            except json.JSONDecodeError:
+                instance.attributes = []
+        instance.save()
+        return super().form_valid(form)
+    
 class RelationshipTypeDetailView(generic.ObjectView):
     queryset = models.RelationshipType.objects.all()
 

@@ -3,6 +3,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 from . import models
 from utilities.forms.fields import DynamicModelChoiceField, JSONField
+import json
 
 class GenericObjectTypeForm(NetBoxModelForm):
     attributes = forms.CharField(
@@ -20,10 +21,11 @@ class GenericObjectTypeForm(NetBoxModelForm):
         fields = ["name", "attributes"]
 
 def clean_attributes(self):
-    import json
     attributes = self.cleaned_data.get("attributes", "[]")
+    print("Raw attributes from form:", attributes)
     try:
         parsed_attributes = json.loads(attributes)
+        print("Parsed attributes:", parsed_attributes)
         for attr in parsed_attributes:
             if "type" not in attr or "name" not in attr:
                 raise forms.ValidationError("Each attribute must have a 'name' and 'type'.")
@@ -35,9 +37,8 @@ def clean_attributes(self):
                     raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
         return parsed_attributes
     except json.JSONDecodeError as e:
+        print("Error parsing JSON:", e)
         raise forms.ValidationError(f"Invalid JSON: {e}")
-
-
         
 class GenericObjectForm(NetBoxModelForm):
     object_type = forms.ModelChoiceField(
