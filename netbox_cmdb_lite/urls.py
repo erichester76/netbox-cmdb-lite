@@ -15,7 +15,7 @@ urlpatterns = [
     path(
         "generic-object-types/<int:pk>/changelog/",
         ObjectChangeLogView.as_view(),
-        name="genericobjecttypes_changelog",
+        name="genericobjecttype_changelog",
         kwargs={"model": models.GenericObjectType},
     ),
     
