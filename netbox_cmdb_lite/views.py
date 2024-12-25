@@ -18,7 +18,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
-    template_name = "netbox/object_detail.html"  
+    template_name = "generic/object.html"  
 
     def get_extra_context(self, request, instance):
         """
