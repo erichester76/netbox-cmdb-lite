@@ -34,8 +34,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
             ],
             'attributes': instance.attributes
         }
-        
-    
+           
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
 
