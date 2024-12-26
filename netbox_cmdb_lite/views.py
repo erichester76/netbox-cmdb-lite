@@ -13,7 +13,7 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
-    template = "netbox_cmdb_lite/genericobjecttype_edit.html"
+    template_name = "netbox_cmdb_lite/genericobjecttype_edit.html"
     
     def form_valid(self, form):
         instance = form.save(commit=False)
