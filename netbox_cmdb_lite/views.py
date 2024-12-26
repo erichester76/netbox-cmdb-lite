@@ -23,16 +23,17 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
 
-def get_extra_context(self, request, instance):
-    return {
-        'fields': [
-            ('Name', instance.name),
-            ('Created', instance.created),
-            ('Last Updated', instance.last_updated),
-        ],
-        'attributes': instance.attributes  # Pass attributes as-is
-    }
-
+    def get_extra_context(self, request):
+        return {
+            'fields': [
+                ('Name', self.object.name),
+                ('Created', self.object.created),
+                ('Last Updated', self.object.last_updated),
+            ],
+            'attributes': self.object.attributes
+        }
+        
+    
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
 
