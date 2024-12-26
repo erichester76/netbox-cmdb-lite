@@ -3,8 +3,6 @@
 
 {% block content %}
     <h3>Attributes</h3>
-    <pre>{{ view|pprint }}</pre>
-    <pre>{{ attributes|pprint }}</pre>
       {% if attributes %}
         <table class="table table-striped table-bordered">
             <thead>
@@ -23,11 +21,13 @@
                     <td>
                         {% if attribute.type == "multi-choice" %}
                             {{ attribute.options|join:", " }}
-                        {% else %}
-                            N/A
                         {% endif %}
                     </td>
-                    <td>{{ attribute.reference|default:"N/A" }}</td>
+                    <td>
+                        {% if attribute.type == "foreign-key" %}
+                            {{ attribute.reference|default:"N/A" }}
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
