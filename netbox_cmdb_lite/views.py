@@ -33,9 +33,6 @@ def get_extra_context(self, request, instance):
         'attributes': instance.attributes  # Pass attributes as-is
     }
 
-
-
-
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObjectType.objects.all()
 
