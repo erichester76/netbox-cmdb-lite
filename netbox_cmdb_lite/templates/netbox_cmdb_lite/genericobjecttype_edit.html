@@ -1,5 +1,4 @@
 {% extends "generic/object_edit.html" %}
-{% load static %}
 {% block title %}Add/Edit Generic Object Type{% endblock %}
 {% block content %}
 <div class="panel panel-default">
@@ -11,8 +10,11 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_name">Name</label>
-                {{ form.name }}
+                {{ form.name|add_class:"form-control" }}
             </div>
+
+            <!-- Hidden attributes field -->
+            <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
             <div class="form-group">
                 <label>Object Fields</label>
@@ -84,7 +86,9 @@
                 attributes.push(attribute);
             }
         });
+
         attributesField.value = JSON.stringify(attributes); // Save to hidden input field
+        console.log("Updated attributesField value:", attributesField.value); // Debugging output
     }
 
     function toggleFieldOptions(select, options, reference) {
