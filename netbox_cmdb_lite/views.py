@@ -29,7 +29,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
             'fields': [
                 ('Name', instance.name),
                 ('Created', instance.created),
-                ('Last Updated', self.object.last_updated),
+                ('Last Updated', instance.last_updated),
             ],
             'attributes': instance.attributes
         }
