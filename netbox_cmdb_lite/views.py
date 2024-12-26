@@ -23,7 +23,8 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
 
-    def get_extra_context(self, request):
+    def get_extra_context(self, request, instance):
+        
         return {
             'fields': [
                 ('Name', self.object.name),
