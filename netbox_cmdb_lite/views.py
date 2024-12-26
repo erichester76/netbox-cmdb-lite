@@ -13,7 +13,8 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
- 
+    template = "netbox_cmdb_lite/genericobjecttype_edit.html"
+    
     def form_valid(self, form):
         instance = form.save(commit=False)
         print("Attributes before saving:", instance.attributes)  # Debugging output
@@ -22,7 +23,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
-
+    
     def get_extra_context(self, request, instance):
         
         return {
