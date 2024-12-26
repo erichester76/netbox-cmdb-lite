@@ -102,7 +102,7 @@ class GenericObjectDetailView(generic.ObjectView):
         
 class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
-    form = models.GenericObjectForm
+    form = forms.GenericObjectForm
     template_name = "netbox_cmdb_lite/genericobject_edit.html"
 
     def get_form(self, *args, **kwargs):
