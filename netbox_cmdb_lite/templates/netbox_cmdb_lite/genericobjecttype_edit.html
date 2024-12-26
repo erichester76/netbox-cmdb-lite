@@ -8,10 +8,6 @@
     <div class="panel-body">
         <form method="post" onsubmit="updateAttributesField();">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_name">Name</label>
-                {{ form.name" }}
-            </div>
 
             <!-- Hidden attributes field -->
             <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
