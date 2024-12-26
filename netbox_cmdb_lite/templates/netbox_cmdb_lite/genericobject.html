@@ -1,0 +1,23 @@
+{% extends "generic/object.html" %}
+
+{% block content %}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Field Name</th>
+            <th>Type</th>
+            <th>Value</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for attribute in attributes %}
+        <tr>
+            <td>{{ attribute.name }}</td>
+            <td>{{ attribute.type }}</td>
+            <td>{{ attribute.value }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{{ block.super }}
+{% endblock %}
