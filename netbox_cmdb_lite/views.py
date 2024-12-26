@@ -23,7 +23,6 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
 
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
-    template_name = "generic/object.html"  
 
     def get_extra_context(self, request, instance):
         """
@@ -51,7 +50,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
             ('Name', instance.name),
             ('Created', instance.created),
             ('Last Updated', instance.last_updated),
-            ('Attributes', expanded_fields),
+            ('Attributes', json.dumps(expanded_fields, indent=2)),  # Convert to string for display
         ]
 
         return {

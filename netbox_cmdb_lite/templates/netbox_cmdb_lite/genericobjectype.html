@@ -1,0 +1,33 @@
+
+{% extends "generic/object.html" %}
+
+{% block content %}
+    <h3>Attributes</h3>
+    {% if fields.3.1 %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Field Name</th>
+                    <th>Type</th>
+                    <th>Options</th>
+                    <th>Reference</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for field in fields.3.1 %}
+                <tr>
+                    <td>{{ field.name }}</td>
+                    <td>{{ field.type }}</td>
+                    <td>{{ field.options|default:"N/A" }}</td>
+                    <td>{{ field.reference|default:"N/A" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No attributes defined.</p>
+    {% endif %}
+    {{ block.super }}
+{% endblock %}
+
+
