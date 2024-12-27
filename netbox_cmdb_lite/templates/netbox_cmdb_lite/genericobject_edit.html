@@ -39,49 +39,54 @@
         }
 
         // Fetch attributes for the selected object type
-        fetch(`/netbox/plugins/cmdb-lite/object-types/${objectTypeId}/attributes/`)
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.attributes) {
-                    data.attributes.forEach((attr) => {
-                        const fieldDiv = document.createElement("div");
-                        fieldDiv.className = "form-group";
-
-                        if (attr.type === "string") {
-                            fieldDiv.innerHTML = `
-                                <label>${attr.name}</label>
-                                <input type="text" name="metadata[${attr.name}]" class="form-control" />
-                            `;
-                        } else if (attr.type === "integer") {
-                            fieldDiv.innerHTML = `
-                                <label>${attr.name}</label>
-                                <input type="number" name="metadata[${attr.name}]" class="form-control" />
-                            `;
-                        } else if (attr.type === "boolean") {
-                            fieldDiv.innerHTML = `
-                                <div class="form-check">
-                                    <input type="checkbox" name="metadata[${attr.name}]" class="form-check-input" />
-                                    <label class="form-check-label">${attr.name}</label>
-                                </div>
-                            `;
-                        } else if (attr.type === "multi-choice") {
-                            const options = attr.options
-                                .map((opt) => `<option value="${opt}">${opt}</option>`)
-                                .join("");
-                            fieldDiv.innerHTML = `
-                                <label>${attr.name}</label>
-                                <select name="metadata[${attr.name}]" class="form-control">${options}</select>
-                            `;
-                        }
-
-                        container.appendChild(fieldDiv);
-                    });
+        fetch(`/api/plugins/cmdb-lite/object-types/${objectTypeId}/`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`Error fetching object type: ${response.statusText}`);
                 }
+                return response.json();
+            })
+            .then((data) => {
+                const attributes = data.attributes || [];
+                attributes.forEach((attr) => {
+                    const fieldDiv = document.createElement("div");
+                    fieldDiv.className = "form-group";
+
+                    if (attr.type === "string") {
+                        fieldDiv.innerHTML = `
+                            <label>${attr.name}</label>
+                            <input type="text" name="metadata[${attr.name}]" class="form-control" />
+                        `;
+                    } else if (attr.type === "integer") {
+                        fieldDiv.innerHTML = `
+                            <label>${attr.name}</label>
+                            <input type="number" name="metadata[${attr.name}]" class="form-control" />
+                        `;
+                    } else if (attr.type === "boolean") {
+                        fieldDiv.innerHTML = `
+                            <div class="form-check">
+                                <input type="checkbox" name="metadata[${attr.name}]" class="form-check-input" />
+                                <label class="form-check-label">${attr.name}</label>
+                            </div>
+                        `;
+                    } else if (attr.type === "multi-choice") {
+                        const options = attr.options
+                            .map((opt) => `<option value="${opt}">${opt}</option>`)
+                            .join("");
+                        fieldDiv.innerHTML = `
+                            <label>${attr.name}</label>
+                            <select name="metadata[${attr.name}]" class="form-control">${options}</select>
+                        `;
+                    }
+
+                    document.getElementById("dynamic-fields-container").appendChild(fieldDiv);
+                });
             })
             .catch((error) => {
                 console.error("Error fetching attributes:", error);
             });
     });
+
 
     // Trigger change event on page load if editing
     if (objectTypeField.value) {

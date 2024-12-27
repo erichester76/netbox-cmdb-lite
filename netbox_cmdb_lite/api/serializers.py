@@ -13,7 +13,7 @@ class GenericObjectTypeSerializer(NetBoxModelSerializer):
 class GenericObjectSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObject
-        fields = ['id', 'name', 'object_type', 'created', 'last_updated']
+        fields = ['id', 'name', 'object_type', 'metadata', 'created', 'last_updated']
 
 # Serializer for RelationshipType
 class RelationshipTypeSerializer(NetBoxModelSerializer):
