@@ -11,7 +11,7 @@ urlpatterns = [
     path("generic-object-types/<int:pk>/edit/", views.GenericObjectTypeEditView.as_view(), name="genericobjecttype_edit"),
     path("generic-object-types/<int:pk>/", views.GenericObjectTypeDetailView.as_view(), name="genericobjecttype"),
     path("generic-object-types/<int:pk>/delete/", views.GenericObjectTypeDeleteView.as_view(), name="genericobjecttype_delete"),
-    path("generic-object-types/<int:pk>/attributes/", views.object_type_attributes, name="genericobjecttype_attributes"),
+    path("generic-object-types/<int:pk>/attributes/", views.get_object_type_attributes, name="genericobjecttype_attributes"),
     path(
         "generic-object-types/<int:pk>/changelog/",
         ObjectChangeLogView.as_view(),
