@@ -96,7 +96,16 @@ class GenericObjectForm(forms.ModelForm):
                     required=False,
                     initial=self.instance.metadata.get(field_name, "") if self.instance and self.instance.metadata else ""
                 )
-
+                
+    def clean(self):
+        # Ensure metadata is constructed from dynamic fields
+        cleaned_data = super().clean()
+        metadata = {}
+        for field_name in self.fields:
+            if field_name not in ["name", "object_type", "metadata"]:
+                metadata[field_name] = cleaned_data.get(field_name)
+        cleaned_data["metadata"] = metadata
+        return cleaned_data
 
 class RelationshipTypeForm(NetBoxModelForm):
     class Meta:

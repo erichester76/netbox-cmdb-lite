@@ -114,12 +114,14 @@ class GenericObjectEditView(generic.ObjectEditView):
 
     def form_valid(self, form):
         instance = form.save(commit=False)
-        # Save metadata
+
+        # Ensure metadata is saved correctly
         metadata = {}
         for field in form.fields:
-            if field in instance.object_type.attributes:
+            if any(attr["name"] == field for attr in instance.object_type.attributes):
                 metadata[field] = form.cleaned_data[field]
         instance.metadata = metadata
+
         instance.save()
         return super().form_valid(form)
 
