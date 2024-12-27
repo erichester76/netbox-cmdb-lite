@@ -39,7 +39,7 @@
         }
 
         // Fetch attributes for the selected object type
-        fetch(`/plugins/cmdb-lite/api/object-type/${objectTypeId}/attributes/`)
+        fetch(`/netbox/api/plugins/cmdb-lite/object-types/${objectTypeId}/attributes/`)
             .then((response) => response.json())
             .then((data) => {
                 if (data.attributes) {

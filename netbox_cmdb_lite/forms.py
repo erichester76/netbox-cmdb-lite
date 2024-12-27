@@ -43,7 +43,6 @@ class GenericObjectForm(forms.ModelForm):
         fields = ["name", "object_type"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
-            "object_type": forms.Select(attrs={"class": "form-control"}),
         }
 
     def clean(self):
