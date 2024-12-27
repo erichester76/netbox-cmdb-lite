@@ -65,12 +65,12 @@ class RelationshipTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.RelationshipType.objects.all()
 
 # ObjectType Attributes API
-def object_type_attributes(request, pk):
-    object_type = models.GenericObjectType.objects.filter(pk=pk).first()
-    if not object_type:
-        return JsonResponse({"error": "ObjectType not found."}, status=404)
-    attributes = object_type.attributes or {}
-    return JsonResponse({"attributes": attributes})
+def get_object_type_attributes(request, pk):
+    try:
+        object_type = models.GenericObjectType.objects.get(pk=pk)
+        return JsonResponse({"attributes": object_type.attributes}, safe=False)
+    except models.GenericObjectType.DoesNotExist:
+        return JsonResponse({"error": "Object type not found"}, status=404)
 
 # GenericObject Views
 class GenericObjectListView(generic.ObjectListView):

@@ -1,1 +1,91 @@
 {% extends "generic/object_edit.html" %}
+{% block title %}Add/Edit Generic Object{% endblock %}
+{% block content %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ form.instance.pk|default:"Add a new" }} Generic Object</h3>
+    </div>
+    <div class="panel-body">
+        <form method="post" id="generic-object-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="id_name">Name</label>
+                {{ form.name|add_class:"form-control" }}
+            </div>
+            <div class="form-group">
+                <label for="id_object_type">Object Type</label>
+                {{ form.object_type|add_class:"form-control" }}
+            </div>
+            <div id="dynamic-fields-container">
+                <!-- Dynamic fields will be injected here -->
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const objectTypeField = document.getElementById("id_object_type");
+    const container = document.getElementById("dynamic-fields-container");
+
+    objectTypeField.addEventListener("change", function () {
+        const objectTypeId = this.value;
+
+        // Clear existing dynamic fields
+        container.innerHTML = "";
+
+        if (!objectTypeId) {
+            return;
+        }
+
+        // Fetch attributes for the selected object type
+        fetch(`/plugins/cmdb-lite/api/object-type/${objectTypeId}/attributes/`)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.attributes) {
+                    data.attributes.forEach((attr) => {
+                        const fieldDiv = document.createElement("div");
+                        fieldDiv.className = "form-group";
+
+                        if (attr.type === "string") {
+                            fieldDiv.innerHTML = `
+                                <label>${attr.name}</label>
+                                <input type="text" name="metadata[${attr.name}]" class="form-control" />
+                            `;
+                        } else if (attr.type === "integer") {
+                            fieldDiv.innerHTML = `
+                                <label>${attr.name}</label>
+                                <input type="number" name="metadata[${attr.name}]" class="form-control" />
+                            `;
+                        } else if (attr.type === "boolean") {
+                            fieldDiv.innerHTML = `
+                                <div class="form-check">
+                                    <input type="checkbox" name="metadata[${attr.name}]" class="form-check-input" />
+                                    <label class="form-check-label">${attr.name}</label>
+                                </div>
+                            `;
+                        } else if (attr.type === "multi-choice") {
+                            const options = attr.options
+                                .map((opt) => `<option value="${opt}">${opt}</option>`)
+                                .join("");
+                            fieldDiv.innerHTML = `
+                                <label>${attr.name}</label>
+                                <select name="metadata[${attr.name}]" class="form-control">${options}</select>
+                            `;
+                        }
+
+                        container.appendChild(fieldDiv);
+                    });
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching attributes:", error);
+            });
+    });
+
+    // Trigger change event on page load if editing
+    if (objectTypeField.value) {
+        objectTypeField.dispatchEvent(new Event("change"));
+    }
+</script>
+{% endblock %}

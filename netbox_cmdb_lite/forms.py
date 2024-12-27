@@ -42,70 +42,15 @@ class GenericObjectForm(forms.ModelForm):
         model = models.GenericObject
         fields = ["name", "object_type"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.instance = kwargs.get("instance", None)
-
-        # Determine object_type from instance or initial data
-        object_type = self.instance.object_type if self.instance else self.data.get("object_type")
-
-        # If an object_type is set, dynamically add fields based on attributes
-        if object_type:
-            if isinstance(object_type, models.GenericObjectType):
-                object_type_instance = object_type
-            else:
-                object_type_instance = models.GenericObjectType.objects.get(pk=object_type)
-            self._add_dynamic_fields(object_type_instance)
-
-    def _add_dynamic_fields(self, object_type):
-        for attribute in object_type.attributes:
-            field_name = attribute["name"]
-            field_type = attribute["type"]
-
-            # Add fields dynamically based on type
-            if field_type == "string":
-                self.fields[field_name] = forms.CharField(
-                    label=field_name.capitalize(),
-                    required=False,
-                    initial=self.instance.metadata.get(field_name, "") if self.instance else ""
-                )
-            elif field_type == "integer":
-                self.fields[field_name] = forms.IntegerField(
-                    label=field_name.capitalize(),
-                    required=False,
-                    initial=self.instance.metadata.get(field_name, 0) if self.instance else 0
-                )
-            elif field_type == "boolean":
-                self.fields[field_name] = forms.BooleanField(
-                    label=field_name.capitalize(),
-                    required=False,
-                    initial=self.instance.metadata.get(field_name, False) if self.instance else False
-                )
-            elif field_type == "multi-choice":
-                self.fields[field_name] = forms.MultipleChoiceField(
-                    choices=[(opt, opt) for opt in attribute.get("options", [])],
-                    label=field_name.capitalize(),
-                    required=False,
-                    initial=self.instance.metadata.get(field_name, []) if self.instance else []
-                )
-            elif field_type == "foreign-key":
-                self.fields[field_name] = forms.CharField(
-                    label=f"{field_name.capitalize()} (Reference)",
-                    required=False,
-                    initial=self.instance.metadata.get(field_name, "") if self.instance else ""
-                )
-
     def clean(self):
         cleaned_data = super().clean()
+        object_type = cleaned_data.get("object_type")
 
-        # Build metadata dynamically from dynamic fields
-        metadata = {}
-        for field_name in self.fields:
-            if field_name not in ["name", "object_type"]:
-                metadata[field_name] = cleaned_data.get(field_name)
-        cleaned_data["metadata"] = metadata
+        if not object_type:
+            raise forms.ValidationError("An object type must be selected.")
+
+        # Metadata will be populated dynamically via the frontend
         return cleaned_data
-   
 
 
 class RelationshipTypeForm(NetBoxModelForm):
