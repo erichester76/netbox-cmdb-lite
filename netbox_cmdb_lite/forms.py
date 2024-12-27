@@ -35,7 +35,7 @@ class GenericObjectForm(forms.ModelForm):
         queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
-        to_field_name="name",  # Explicitly use the `name` field
+        to_field_name="name",
         help_text="Select the object type to load fields dynamically.",
     )
 

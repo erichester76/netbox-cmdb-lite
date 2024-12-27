@@ -39,7 +39,7 @@
         }
 
         // Fetch attributes for the selected object type
-        fetch(`/api/plugins/cmdb-lite/object-types/${objectTypeId}/`)
+        fetch(`/netbox/api/plugins/cmdb-lite/object-types/${objectTypeId}/`)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`Error fetching object type: ${response.statusText}`);
