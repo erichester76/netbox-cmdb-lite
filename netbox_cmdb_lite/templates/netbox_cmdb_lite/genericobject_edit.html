@@ -10,11 +10,11 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="id_name">Name</label>
-                {{ form.name|add_class:"form-control" }}
+                {{ form.name }}
             </div>
             <div class="form-group">
                 <label for="id_object_type">Object Type</label>
-                {{ form.object_type|add_class:"form-control" }}
+                {{ form.object_type }}
             </div>
             <div id="dynamic-fields-container">
                 <!-- Dynamic fields will be injected here -->
