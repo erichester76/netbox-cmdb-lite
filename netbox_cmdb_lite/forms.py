@@ -54,9 +54,14 @@ class GenericObjectForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        instance = kwargs.get('instance')
-        if instance and instance.object_type:
-            self._add_dynamic_fields(instance.object_type)
+        instance = kwargs.get("instance")
+        object_type = instance.object_type if instance else self.data.get("object_type")
+
+        if object_type:
+            object_type_instance = (
+                object_type if isinstance(object_type, GenericObjectType) else GenericObjectType.objects.get(pk=object_type)
+            )
+            self._add_dynamic_fields(object_type_instance)
 
     def _add_dynamic_fields(self, object_type):
         # Dynamically add fields based on the object type's attributes
