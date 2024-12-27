@@ -78,7 +78,7 @@ class GenericObjectListView(generic.ObjectListView):
     table = tables.GenericObjectTable
 
 class GenericObjectDetailView(generic.ObjectView):
-    queryset = GenericObject.objects.all()
+    queryset = models.GenericObject.objects.all()
     template_name = "netbox_cmdb_lite/genericobject_detail.html"
 
     def get_extra_context(self, request, instance):
