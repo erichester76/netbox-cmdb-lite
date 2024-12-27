@@ -78,7 +78,7 @@ class GenericObjectListView(generic.ObjectListView):
     table = tables.GenericObjectTable
 
 class GenericObjectDetailView(generic.ObjectView):
-    queryset = models.GenericObject.objects.all()
+    queryset = GenericObject.objects.all()
     template_name = "netbox_cmdb_lite/genericobject_detail.html"
 
     def get_extra_context(self, request, instance):
@@ -98,37 +98,21 @@ class GenericObjectDetailView(generic.ObjectView):
             ],
             "attributes": attributes
         }
-        
-        
+
+
 class GenericObjectEditView(generic.ObjectEditView):
     queryset = models.GenericObject.objects.all()
     form = forms.GenericObjectForm
     template_name = "netbox_cmdb_lite/genericobject_edit.html"
 
-    def get_form(self, *args, **kwargs):
-        form = super().get_form(*args, **kwargs)
-        instance = kwargs.get('instance') or self.get_object()
-        if instance and instance.object_type:
-            form._add_dynamic_fields(instance.object_type)
-        return form
-
     def form_valid(self, form):
         instance = form.save(commit=False)
 
-        # Retrieve the object_type either from the instance or the form
-        object_type = instance.object_type or form.cleaned_data.get("object_type")
-
         # Ensure metadata is saved correctly
-        metadata = {}
-        if object_type and object_type.attributes:
-            for field in form.fields:
-                # Check if the field exists in object_type.attributes
-                if any(attr["name"] == field for attr in object_type.attributes):
-                    metadata[field] = form.cleaned_data[field]
-        instance.metadata = metadata
-
+        instance.metadata = form.cleaned_data.get("metadata", {})
         instance.save()
         return super().form_valid(form)
+
 
 
 class GenericObjectDeleteView(generic.ObjectDeleteView):
