@@ -30,27 +30,30 @@ def clean_attributes(self):
     
     return attributes
 
+
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
         queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
-        help_text="Select the object type to load fields dynamically."
+        help_text="Select the object type to load fields dynamically.",
+        widget=forms.Select(attrs={"class": "form-control"}),
     )
 
     class Meta:
         model = models.GenericObject
         fields = ["name", "object_type"]
+        widgets = {
+            "name": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
     def clean(self):
         cleaned_data = super().clean()
         object_type = cleaned_data.get("object_type")
-
         if not object_type:
             raise forms.ValidationError("An object type must be selected.")
-
-        # Metadata will be populated dynamically via the frontend
         return cleaned_data
+
 
 
 class RelationshipTypeForm(NetBoxModelForm):
