@@ -33,11 +33,9 @@ def clean_attributes(self):
 
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
-        queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
         help_text="Select the object type to load fields dynamically.",
-        widget=forms.Select(attrs={"class": "form-control"}),
     )
 
     class Meta:
@@ -45,6 +43,7 @@ class GenericObjectForm(forms.ModelForm):
         fields = ["name", "object_type"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}),
+            "object_type": forms.Select(attrs={"class": "form-control"}),
         }
 
     def clean(self):
