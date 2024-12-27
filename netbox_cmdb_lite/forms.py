@@ -2,7 +2,7 @@ from netbox.forms import NetBoxModelForm
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from . import models
-from utilities.forms.fields import ModelChoiceField, JSONField
+from utilities.forms.fields import DynamicModelChoiceField, JSONField
 import json
 
 class GenericObjectTypeForm(NetBoxModelForm):
@@ -32,7 +32,7 @@ def clean_attributes(self):
 
 
 class GenericObjectForm(forms.ModelForm):
-    object_type = ModelChoiceField(
+    object_type = DynamicModelChoiceField(
         queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,

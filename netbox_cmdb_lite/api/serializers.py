@@ -11,12 +11,9 @@ class GenericObjectTypeSerializer(NetBoxModelSerializer):
 
 # Serializer for GenericObject
 class GenericObjectSerializer(NetBoxModelSerializer):
-    object_type = serializers.PrimaryKeyRelatedField(queryset=models.GenericObjectType.objects.all())
-    metadata = serializers.JSONField()
-
     class Meta:
         model = models.GenericObject
-        fields = ['id', 'name', 'object_type', 'metadata', 'created', 'last_updated']
+        fields = ['id', 'name', 'object_type', 'created', 'last_updated']
 
 # Serializer for RelationshipType
 class RelationshipTypeSerializer(NetBoxModelSerializer):
