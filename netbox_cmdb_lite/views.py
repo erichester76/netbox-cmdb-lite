@@ -115,15 +115,21 @@ class GenericObjectEditView(generic.ObjectEditView):
     def form_valid(self, form):
         instance = form.save(commit=False)
 
+        # Retrieve the object_type either from the instance or the form
+        object_type = instance.object_type or form.cleaned_data.get("object_type")
+
         # Ensure metadata is saved correctly
         metadata = {}
-        for field in form.fields:
-            if any(attr["name"] == field for attr in instance.object_type.attributes):
-                metadata[field] = form.cleaned_data[field]
+        if object_type and object_type.attributes:
+            for field in form.fields:
+                # Check if the field exists in object_type.attributes
+                if any(attr["name"] == field for attr in object_type.attributes):
+                    metadata[field] = form.cleaned_data[field]
         instance.metadata = metadata
 
         instance.save()
         return super().form_valid(form)
+
 
 class GenericObjectDeleteView(generic.ObjectDeleteView):
     queryset = models.GenericObject.objects.all()
