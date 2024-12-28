@@ -2,6 +2,9 @@
 {% block title %}Add/Edit Generic Object Type{% endblock %}
 {% block content %}
 <div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ form.instance.pk|default:"Add a new" }} Generic Object Type</h3>
+    </div>
     <div class="panel-body">
         <form method="post" onsubmit="updateAttributesField();">
             {% csrf_token %}
@@ -28,20 +31,23 @@
             <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
             <!-- Attributes Section -->
-            <div class="col-md-1"></div>
-            <div class="form-group">
-                <label>Object Fields</label>
-                <p class="form-text text-muted">Add one or more fields, including their type and optional settings.</p>
-                <div id="attributes-container">
-                    <!-- Dynamic attributes will be injected here -->
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <label>Object Fields</label>
+                    <p class="form-text text-muted">Add one or more fields, including their type and optional settings.</p>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
-                    </div>
-                    <div class="col-md-1"></div>
+                <div class="col-md-1"></div>
+            </div>
+            <div id="attributes-container">
+                <!-- Dynamic attributes will be injected here -->
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
                 </div>
+                <div class="col-md-1"></div>
             </div>
 
             <div class="row">
