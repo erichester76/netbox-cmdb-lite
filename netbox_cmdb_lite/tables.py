@@ -7,7 +7,7 @@ class GenericObjectTypeTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericObjectType
-        fields = ("pk", "name", "created", "last_updated", "actions")
+        fields = ("pk", "name", "description", "created", "last_updated", "actions")
 
 class GenericObjectTable(NetBoxTable):
     name = tables.Column(linkify=True)
@@ -15,7 +15,7 @@ class GenericObjectTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericObject
-        fields = ("pk", "name", "object_type", "created", "last_updated", "actions")
+        fields = ("pk", "name", "description", "object_type", "created", "last_updated", "actions")
 
 class RelationshipTypeTable(NetBoxTable):
     name = tables.Column(linkify=True)
