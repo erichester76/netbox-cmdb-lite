@@ -8,28 +8,51 @@
     <div class="panel-body">
         <form method="post" onsubmit="updateAttributesField();">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_name">Name</label>
-                {{ form.name }}
-            </div>
-            <div class="form-group">
-                <label for="id_object_type">Object Category</label>
-                {{ form.category }}
+
+            <!-- Name and Category on the same row -->
+            <div class="row mb-3">
+                <div class="col-md-1"></div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="id_name">Name</label>
+                        {{ form.name }}
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label for="id_category">Object Category</label>
+                        {{ form.category }}
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
             </div>
 
             <!-- Hidden attributes field -->
             <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
+            <!-- Attributes Section -->
             <div class="form-group">
                 <label>Object Fields</label>
                 <p class="form-text text-muted">Add one or more fields, including their type and optional settings.</p>
                 <div id="attributes-container">
                     <!-- Dynamic attributes will be injected here -->
                 </div>
-                <button type="button" class="btn btn-secondary mt-2" onclick="addAttribute()">Add Field</button>
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
+                    </div>
+                    <div class="col-md-2"></div>
+                </div>
             </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Save</button>
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <button type="submit" class="btn btn-primary btn-block mt-3">Save</button>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
         </form>
     </div>
 </div>
@@ -42,10 +65,10 @@
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
         div.innerHTML = `
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <input type="text" class="form-control" placeholder="Field Name" value="${name}" oninput="updateAttributesField()" />
             </div>
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <select class="form-control" onchange="toggleFieldOptions(this, '${options}', '${reference}'); updateAttributesField();">
                     <option value="string" ${type === "string" ? "selected" : ""}>String</option>
                     <option value="integer" ${type === "integer" ? "selected" : ""}>Integer</option>
@@ -54,7 +77,7 @@
                     <option value="foreign-key" ${type === "foreign-key" ? "selected" : ""}>Foreign Key</option>
                 </select>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
                 <input type="text" class="form-control type-options" placeholder="Options (comma-separated)" value="${options}" ${type === "multi-choice" ? "" : "style='display: none;'"}
                 oninput="updateAttributesField()" />
                 <input type="text" class="form-control type-reference mt-2" placeholder="Reference Model" value="${reference}" ${type === "foreign-key" ? "" : "style='display: none;'"}
