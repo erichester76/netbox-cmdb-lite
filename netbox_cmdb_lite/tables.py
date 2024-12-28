@@ -22,7 +22,7 @@ class RelationshipTypeTable(NetBoxTable):
 
     class Meta(NetBoxTable.Meta):
         model = models.RelationshipType
-        fields = ("pk", "name", "created", "last_updated", "actions")
+        fields = ("pk", "name", "description", "created", "last_updated", "actions")
 
 class GenericRelationshipTable(NetBoxTable):
     source = tables.Column(linkify=True)

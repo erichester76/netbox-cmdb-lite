@@ -6,6 +6,7 @@ from django.contrib.contenttypes.models import ContentType
 
 class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=100, unique=True)
+    ddescription = models.TextField(blank=True, null=True)
     attributes = models.JSONField(
         default=list,
         blank=True,
@@ -21,6 +22,7 @@ class GenericObjectType(NetBoxModel):
 
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
+    deacription = models.TextField(blank=True, null=True)
     object_type = models.ForeignKey(GenericObjectType, on_delete=models.CASCADE)
     metadata = models.JSONField(
         default=dict,
