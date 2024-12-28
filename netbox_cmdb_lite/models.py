@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
 
-class Category(models.Model):
+class Category(NetBoxModel):
     name = models.CharField(max_length=100, unique=True, help_text="Name of the category")
     description = models.TextField(blank=True, help_text="Optional description for the category")
 
@@ -14,7 +14,7 @@ class Category(models.Model):
     
 class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=100, unique=True)
-    ddescription = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     attributes = models.JSONField(
         default=list,
         blank=True,
@@ -38,7 +38,7 @@ class GenericObjectType(NetBoxModel):
 
 class GenericObject(NetBoxModel):
     name = models.CharField(max_length=100)
-    deacription = models.TextField(blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
     object_type = models.ForeignKey(GenericObjectType, on_delete=models.CASCADE)
     metadata = models.JSONField(
         default=dict,
