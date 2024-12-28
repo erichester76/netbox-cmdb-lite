@@ -9,7 +9,6 @@
         <form method="post" id="generic-object-form">
             {% csrf_token %}
             <div class="form-group">
-                <pre>{{ form.object_type }}</pre>
                 <label for="id_name">Name</label>
                 {{ form.name }}
             </div>
