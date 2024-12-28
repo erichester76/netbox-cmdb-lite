@@ -7,8 +7,9 @@ from django.contrib.contenttypes.models import ContentType
 class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
-        fields = ('id', 'name', 'attributes', 'created', 'last_updated')
-        brief_fields = ('id', 'name')
+        #fields = ('id', 'name', 'attributes', 'created', 'last_updated')
+        #brief_fields = ('id', 'name')
+        fields = '__all__'
 
 # Serializer for GenericObject
 class GenericObjectSerializer(NetBoxModelSerializer):
