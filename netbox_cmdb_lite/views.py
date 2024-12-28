@@ -5,6 +5,22 @@ from . import forms
 from django.http import JsonResponse
 import json
 
+
+class CategoryListView(generic.ObjectListView):
+    queryset = models.Category.objects.all()
+    table = "CategoryTable"
+
+class CategoryEditView(generic.ObjectEditView):
+    queryset = models.Category.objects.all()
+    model_form = forms.CategoryForm
+
+class CategoryDeleteView(generic.ObjectDeleteView):
+    queryset = models.Category.objects.all()
+
+class CategoryDetailView(generic.ObjectView):
+    queryset = models.Category.objects.all()
+
+
 # GenericObjectType Views
 class GenericObjectTypeListView(generic.ObjectListView):
     queryset = models.GenericObjectType.objects.all()

@@ -2,6 +2,7 @@ from netbox.api.routers import NetBoxRouter
 from . import views
 
 router = NetBoxRouter()
+router.register('categories', views.CategoryViewSet)
 router.register('object-types', views.GenericObjectTypeViewSet)
 router.register('generic-objects', views.GenericObjectViewSet)
 router.register('relationship-types', views.RelationshipTypeViewSet)

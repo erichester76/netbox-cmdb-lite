@@ -4,6 +4,14 @@ from django.urls import reverse
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True, help_text="Name of the category")
+    description = models.TextField(blank=True, help_text="Optional description for the category")
+
+    def __str__(self):
+        return self.name
+    
 class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=100, unique=True)
     ddescription = models.TextField(blank=True, null=True)
@@ -12,6 +20,14 @@ class GenericObjectType(NetBoxModel):
         blank=True,
         null=True,
         help_text="Define the fields and their types for this object type."
+    )
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="object_types",
+        help_text="Category this object type belongs to"
     )
 
     def __str__(self):

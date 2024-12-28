@@ -3,6 +3,13 @@ from netbox.api.serializers import NetBoxModelSerializer
 from .. import models 
 from django.contrib.contenttypes.models import ContentType
 
+
+# Serializer for GenericObjectType
+class CategorySerializer(NetBoxModelSerializer):
+    class Meta:
+        model = models.Category
+        fields = '__all__'
+
 # Serializer for GenericObjectType
 class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:

@@ -2,6 +2,10 @@ from netbox.api.viewsets import NetBoxModelViewSet
 from .. import models
 from . import serializers
 
+class CategoryViewSet(NetBoxModelViewSet):
+    queryset = models.Category.objects.all()
+    serializer_class = serializers.CategorySerializer
+
 class GenericObjectTypeViewSet(NetBoxModelViewSet):
     queryset = models.GenericObjectType.objects.all()
     serializer_class = serializers.GenericObjectTypeSerializer

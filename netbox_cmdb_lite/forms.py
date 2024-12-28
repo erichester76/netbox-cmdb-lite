@@ -4,10 +4,22 @@ from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import DynamicModelChoiceField, JSONField
 from . import models
 
+
+class CategoryForm(NetBoxModelForm):
+    class Meta:
+        model = models.Category
+        fields = ["name", "description"]
+
 class GenericObjectTypeForm(NetBoxModelForm):
+    category = DynamicModelChoiceField(
+        queryset=models.Category.objects.all(),
+        label="Category",
+        required=False,
+        help_text="Select a category for this object type"
+    )
     class Meta:
         model = models.GenericObjectType
-        fields = ["name", "attributes"]
+        fields = ["name", "category", "attributes"]
 
 def clean_attributes(self):
     attributes = self.cleaned_data.get("attributes", [])

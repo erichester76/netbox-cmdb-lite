@@ -5,6 +5,18 @@ from netbox.views.generic import ObjectChangeLogView
 
 urlpatterns = [
 
+    path("categories/", views.CategoryListView.as_view(), name="category_list"),
+    path("categories/add/", views.CategoryEditView.as_view(), name="category_add"),
+    path("categories/<int:pk>/edit/", views.CategoryEditView.as_view(), name="category_edit"),
+    path("categories/<int:pk>/", views.CategoryDetailView.as_view(), name="category_edit"),
+    path("categories/<int:pk>/delete/", views.CategoryDeleteView.as_view(), name="category_delete"),
+    path(
+        "categories/<int:pk>/changelog/",
+        ObjectChangeLogView.as_view(),
+        name="categories_changelog",
+        kwargs={"model": models.Category},
+    ),
+
     # GenericObjectType URLs
     path("generic-object-types/", views.GenericObjectTypeListView.as_view(), name="genericobjecttype_list"),
     path("generic-object-types/add/", views.GenericObjectTypeEditView.as_view(), name="genericobjecttype_add"),
