@@ -7,22 +7,22 @@ from django.contrib.contenttypes.models import ContentType
 class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
-        fields = ['id', 'name', 'attributes', 'created', 'last_updated']
-        brief_fields = ['id', 'name']
+        fields = ('id', 'name', 'attributes', 'created', 'last_updated')
+        brief_fields = ('id', 'name')
 
 # Serializer for GenericObject
 class GenericObjectSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObject
-        fields = ['id', 'name', 'object_type', 'metadata', 'created', 'last_updated']
-        brief_fields = ['id', 'name']
+        fields = ('id', 'name', 'object_type', 'metadata', 'created', 'last_updated')
+        brief_fields = ('id', 'name')
 
 # Serializer for RelationshipType
 class RelationshipTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.RelationshipType
-        fields = ['id', 'name', 'description', 'created', 'last_updated']
-        brief_fields = ['id', 'name']
+        fields = ('id', 'name', 'description', 'created', 'last_updated')
+        brief_fields = ('id', 'name')
 
 # Serializer for GenericRelationship
 class GenericRelationshipSerializer(NetBoxModelSerializer):
@@ -33,8 +33,8 @@ class GenericRelationshipSerializer(NetBoxModelSerializer):
 
     class Meta:
         model = models.GenericRelationship
-        fields = [
+        fields = (
             'id', 'source_content_type', 'source_object_id',
             'target_content_type', 'target_object_id',
             'relationship_type', 'attributes', 'created', 'last_updated'
-        ]
+        )
