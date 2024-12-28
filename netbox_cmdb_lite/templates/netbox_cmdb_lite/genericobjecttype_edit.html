@@ -37,21 +37,21 @@
                 <div id="attributes-container">
                     <!-- Dynamic attributes will be injected here -->
                 </div>
-                <div class="row">
-                    <div class="col-md-2"></div>
-                    <div class="col-md-8">
+                <div class="row mb-3">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
                         <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
                     </div>
-                    <div class="col-md-2"></div>
+                    <div class="col-md-1"></div>
                 </div>
             </div>
 
             <div class="row">
-                <div class="col-md-2"></div>
-                <div class="col-md-8">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
                     <button type="submit" class="btn btn-primary btn-block mt-3">Save</button>
                 </div>
-                <div class="col-md-2"></div>
+                <div class="col-md-1"></div>
             </div>
         </form>
     </div>
@@ -65,6 +65,7 @@
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
         div.innerHTML = `
+            <div class="col-md-1"></div>
             <div class="col-md-2">
                 <input type="text" class="form-control" placeholder="Field Name" value="${name}" oninput="updateAttributesField()" />
             </div>
@@ -77,22 +78,23 @@
                     <option value="foreign-key" ${type === "foreign-key" ? "selected" : ""}>Foreign Key</option>
                 </select>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <input type="text" class="form-control type-options" placeholder="Options (comma-separated)" value="${options}" ${type === "multi-choice" ? "" : "style='display: none;'"}
                 oninput="updateAttributesField()" />
                 <input type="text" class="form-control type-reference mt-2" placeholder="Reference Model" value="${reference}" ${type === "foreign-key" ? "" : "style='display: none;'"}
                 oninput="updateAttributesField()" />
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeAttribute(this)">Remove</button>
             </div>
+            <div class="col-md-1"></div>
         `;
         container.appendChild(div);
         updateAttributesField();
     }
 
     function removeAttribute(button) {
-        button.parentElement.parentElement.remove();
+        button.closest(".row").remove();
         updateAttributesField();
     }
 
@@ -115,7 +117,6 @@
         });
 
         attributesField.value = JSON.stringify(attributes); // Save to hidden input field
-        console.log("Updated attributesField value:", attributesField.value); // Debugging output
     }
 
     function toggleFieldOptions(select, options, reference) {
