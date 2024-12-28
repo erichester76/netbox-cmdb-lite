@@ -8,21 +8,21 @@ class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
         fields = ['id', 'name', 'attributes', 'created', 'last_updated']
-        brief_fields = ['id', 'name', 'attributes']
+        brief_fields = ['id', 'name']
 
 # Serializer for GenericObject
 class GenericObjectSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObject
         fields = ['id', 'name', 'object_type', 'metadata', 'created', 'last_updated']
-        brief_fields = ['id', 'name', 'object_type', 'metadata']
+        brief_fields = ['id', 'name']
 
 # Serializer for RelationshipType
 class RelationshipTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.RelationshipType
         fields = ['id', 'name', 'description', 'created', 'last_updated']
-        brief_fields = ['id', 'name', 'description']
+        brief_fields = ['id', 'name']
 
 # Serializer for GenericRelationship
 class GenericRelationshipSerializer(NetBoxModelSerializer):
