@@ -27,7 +27,27 @@
 <script>
     const objectTypeField = document.getElementById("id_object_type");
     const container = document.getElementById("dynamic-fields-container");
+    const form = document.getElementById('generic-object-form');
+    const metadataField = document.getElementById('id_metadata');
 
+    // Serialize metadata as a JSON object before submission
+    form.addEventListener('submit', (e) => {
+        e.preventDefault(); // Prevent default form submission for debugging
+        const metadata = {};
+
+        // Populate metadata from dynamic fields (if applicable)
+        document.querySelectorAll('[data-metadata-key]').forEach((field) => {
+            const key = field.getAttribute('data-metadata-key');
+            metadata[key] = field.value;
+        });
+
+        // Set metadata field value as a JSON string
+        metadataField.value = JSON.stringify(metadata);
+
+        console.log("Serialized Metadata:", metadataField.value); // Debug output
+        form.submit(); // Submit the form
+    });
+    
     objectTypeField.addEventListener("change", function () {
         const objectTypeId = this.value;
 
