@@ -2,12 +2,20 @@ from netbox.tables import NetBoxTable
 import django_tables2 as tables
 from . import models
 
+
+class CategoryTable(NetBoxTable):
+    name = tables.Column(linkify=True)
+
+    class Meta(NetBoxTable.Meta):
+        model = models.Category
+        fields = ("pk", "name", "description", "created", "last_updated", "actions")
+        
 class GenericObjectTypeTable(NetBoxTable):
     name = tables.Column(linkify=True)
 
     class Meta(NetBoxTable.Meta):
         model = models.GenericObjectType
-        fields = ("pk", "name", "description", "created", "last_updated", "actions")
+        fields = ("pk", "name", "description", "category", "created", "last_updated", "actions")
 
 class GenericObjectTable(NetBoxTable):
     name = tables.Column(linkify=True)
