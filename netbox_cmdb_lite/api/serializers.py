@@ -7,23 +7,22 @@ from django.contrib.contenttypes.models import ContentType
 class GenericObjectTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObjectType
-        #fields = ('id', 'name', 'attributes', 'created', 'last_updated')
-        #brief_fields = ('id', 'name')
-        fields = '__all__'
+        fields = ('id', 'name', 'attributes', 'created', 'last_updated')
+        brief_fields = ('id', 'display', 'name')
 
 # Serializer for GenericObject
 class GenericObjectSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.GenericObject
         fields = ('id', 'name', 'object_type', 'metadata', 'created', 'last_updated')
-        brief_fields = ('id', 'name')
+        brief_fields = ('id', 'display', 'name')
 
 # Serializer for RelationshipType
 class RelationshipTypeSerializer(NetBoxModelSerializer):
     class Meta:
         model = models.RelationshipType
         fields = ('id', 'name', 'description', 'created', 'last_updated')
-        brief_fields = ('id', 'name')
+        brief_fields = ('id', 'display', 'name')
 
 # Serializer for GenericRelationship
 class GenericRelationshipSerializer(NetBoxModelSerializer):
