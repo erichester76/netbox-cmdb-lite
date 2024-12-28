@@ -46,6 +46,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
             'fields': [
                 ('Name', instance.name),
                 ('Created', instance.created),
+                ('Category', instance.category),
                 ('Last Updated', instance.last_updated),
             ],
             'attributes': instance.attributes

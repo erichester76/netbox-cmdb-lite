@@ -17,6 +17,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Select a category for this object type"
     )
+    
     class Meta:
         model = models.GenericObjectType
         fields = ["name", "category", "attributes"]

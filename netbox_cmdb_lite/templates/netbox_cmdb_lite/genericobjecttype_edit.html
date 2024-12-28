@@ -12,6 +12,10 @@
                 <label for="id_name">Name</label>
                 {{ form.name }}
             </div>
+            <div class="form-group">
+                <label for="id_object_type">Object Category</label>
+                {{ form.category }}
+            </div>
 
             <!-- Hidden attributes field -->
             <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
