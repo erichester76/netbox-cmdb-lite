@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import DynamicModelChoiceField
+from utilities.forms.fields import DynamicModelChoiceField, JSONField
 from . import models
 
 class GenericObjectTypeForm(NetBoxModelForm):
@@ -35,23 +35,24 @@ class GenericObjectForm(forms.ModelForm):
         queryset=models.GenericObjectType.objects.all(),
         label="Object Type",
         required=True,
-        help_text="Select the object type to load fields dynamically.",
+        help_text="Select the object type to load fields dynamically."
+    )
+    metadata = JSONField(
+        label="Attributes",
+        required=False,
+        help_text="Dynamic attributes based on the selected object type."
     )
 
     class Meta:
         model = models.GenericObject
-        fields = ["name", "object_type"]
-        widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control"}),
-        }
+        fields = ["name", "object_type", "metadata"]
 
-    def clean(self):
-        cleaned_data = super().clean()
-        object_type = cleaned_data.get("object_type")
-        if not object_type:
-            raise forms.ValidationError("An object type must be selected.")
-        return cleaned_data
-
+    def clean_metadata(self):
+        # Ensure metadata is a valid JSON object
+        metadata = self.cleaned_data.get("metadata", {})
+        if not isinstance(metadata, dict):
+            raise forms.ValidationError("Metadata must be a valid JSON object.")
+        return metadata
 
 
 class RelationshipTypeForm(NetBoxModelForm):

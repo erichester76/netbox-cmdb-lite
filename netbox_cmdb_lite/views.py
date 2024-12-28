@@ -105,10 +105,10 @@ class GenericObjectEditView(generic.ObjectEditView):
     template_name = "netbox_cmdb_lite/genericobject_edit.html"
 
     def form_valid(self, form):
+        # Save the object but include metadata
         instance = form.save(commit=False)
-
-        # Ensure metadata is saved correctly
-        instance.metadata = form.cleaned_data.get("metadata", {})
+        metadata = form.cleaned_data.get("metadata", {})
+        instance.metadata = metadata  # Save metadata to the model
         instance.save()
         return super().form_valid(form)
 
