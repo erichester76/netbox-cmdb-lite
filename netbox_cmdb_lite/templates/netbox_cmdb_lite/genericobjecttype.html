@@ -7,20 +7,32 @@
         </div>
         <div class="card-body">
             {% if attributes %}
-                <ul class="list-group">
-                    {% for attribute in attributes %}
-                        <li class="list-group-item">
-                            <strong>Field Name:</strong> {{ attribute.name }}<br>
-                            <strong>Type:</strong> {{ attribute.type }}<br>
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        {% for attribute in attributes %}
+                            <tr>
+                                <th scope="row" class="text-muted">Field Name</th>
+                                <td>{{ attribute.name }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">Type</th>
+                                <td>{{ attribute.type }}</td>
+                            </tr>
                             {% if attribute.type == "multi-choice" %}
-                                <strong>Options:</strong> {{ attribute.options|join:", " }}<br>
+                                <tr>
+                                    <th scope="row" class="text-muted">Options</th>
+                                    <td>{{ attribute.options|join:", " }}</td>
+                                </tr>
                             {% endif %}
                             {% if attribute.type == "foreign-key" %}
-                                <strong>Reference:</strong> {{ attribute.reference }}
+                                <tr>
+                                    <th scope="row" class="text-muted">Reference</th>
+                                    <td>{{ attribute.reference }}</td>
+                                </tr>
                             {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
                 <p class="text-muted">No attributes defined.</p>
             {% endif %}
@@ -33,19 +45,26 @@
         </div>
         <div class="card-body">
             {% if relationships %}
-                <ul class="list-group">
-                    {% for relationship in relationships %}
-                        <li class="list-group-item">
-                            <strong>Relationship Type:</strong> {{ relationship.type }}<br>
-                            <strong>Allowed Object Types:</strong> 
-                            {% if relationship.allowed_types %}
-                                {{ relationship.allowed_types|join:", " }}
-                            {% else %}
-                                <span class="text-muted">None</span>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
+                <table class="table table-sm table-borderless">
+                    <tbody>
+                        {% for relationship in relationships %}
+                            <tr>
+                                <th scope="row" class="text-muted">Relationship Type</th>
+                                <td>{{ relationship.type }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row" class="text-muted">Allowed Object Types</th>
+                                <td>
+                                    {% if relationship.allowed_types %}
+                                        {{ relationship.allowed_types|join:", " }}
+                                    {% else %}
+                                        <span class="text-muted">None</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             {% else %}
                 <p class="text-muted">No relationships defined.</p>
             {% endif %}

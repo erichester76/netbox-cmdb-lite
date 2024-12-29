@@ -26,7 +26,7 @@
             </div>
 
             <!-- Hidden attributes field -->
-            <input id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
+            <input type ="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
             <!-- Attributes Section -->
             <div class="row">
@@ -47,7 +47,9 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            <input id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
+
+            <!-- Hidden relationships field -->
+            <input type="hidden" id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
             <div id="relationships-container">
                 <!-- Dynamic relationships will be injected here -->
