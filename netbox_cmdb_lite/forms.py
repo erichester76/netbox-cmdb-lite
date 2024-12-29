@@ -1,8 +1,9 @@
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import DynamicModelChoiceField, JSONField
+from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, JSONField
 from . import models
+
 
 
 class CategoryForm(NetBoxModelForm):
@@ -22,6 +23,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Define default relationships for this object type. Specify relationship types and allowed object types."
     )
+    
     class Meta:
         model = models.GenericObjectType
         fields = ["name", "category", "attributes", "relationships"]
@@ -72,6 +74,23 @@ def clean_relationships(self):
             )
 
     return relationships
+
+def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+
+    # Dynamic field for relationship type
+    self.fields['relationship_type'] = DynamicModelChoiceField(
+        queryset=models.RelationshipType.objects.all(),
+        label="Relationship Type",
+        required=False
+    )
+
+    # Dynamic multiple-choice field for allowed object types
+    self.fields['allowed_object_types'] = DynamicModelMultipleChoiceField(
+        queryset=models.GenericObjectType.objects.all(),
+        label="Allowed Object Types",
+        required=False
+    )
 
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(

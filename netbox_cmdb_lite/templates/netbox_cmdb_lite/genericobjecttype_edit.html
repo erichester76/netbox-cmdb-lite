@@ -169,22 +169,29 @@
     const relationshipsContainer = document.getElementById("relationships-container");
     const relationshipsField = document.getElementById("id_relationships");
 
-    function addRelationship(type = "", allowedTypes = "") {
+    function addRelationship(type = "", allowedTypes = []) {
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
         div.innerHTML = `
             <div class="col-md-4">
-                <input type="text" class="form-control" placeholder="Relationship Type" value="${type}" oninput="updateRelationshipsField()" />
+                <select name="relationship_type" class="form-control dynamic-select">
+                    <!-- Relationship types will be dynamically loaded -->
+                </select>
             </div>
             <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Allowed Types (comma-separated)" value="${allowedTypes}" oninput="updateRelationshipsField()" />
+                <select name="allowed_object_types" class="form-control dynamic-multi-select" multiple>
+                    <!-- Allowed object types will be dynamically loaded -->
+                </select>
             </div>
             <div class="col-md-2">
                 <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
             </div>
         `;
         relationshipsContainer.appendChild(div);
-        attributesField.value = JSON.stringify(attributes); // Save to hidden input field
+
+        // Initialize dynamic fields
+        initializeDynamicSelect(div.querySelector("select[name='relationship_type']"), "/api/plugins/cmdb-lite/relationship-types/");
+        initializeDynamicMultiSelect(div.querySelector("select[name='allowed_object_types']"), "/api/plugins/cmdb-lite/object-types/");
     }
 
     function removeRelationship(button) {
@@ -195,8 +202,9 @@
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
-            const type = row.querySelector("input[type='text']").value.trim();
-            const allowedTypes = row.querySelectorAll("input[type='text']")[1].value.split(",").map(type => type.trim());
+            const type = row.querySelector("select[name='relationship_type']").value;
+            const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
+                .map(option => option.value);
             if (type) {
                 relationships.push({ type, allowed_types: allowedTypes });
             }
@@ -204,9 +212,45 @@
         relationshipsField.value = JSON.stringify(relationships); // Save to hidden input field
     }
 
+    // Initialize dynamic fields on page load
+    function initializeDynamicSelect(select, url) {
+        $(select).select2({
+            ajax: {
+                url: url,
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: data.results.map(obj => ({
+                            id: obj.id,
+                            text: obj.name
+                        }))
+                    };
+                }
+            }
+        });
+    }
+
+    function initializeDynamicMultiSelect(select, url) {
+        $(select).select2({
+            ajax: {
+                url: url,
+                dataType: 'json',
+                processResults: function (data) {
+                    return {
+                        results: data.results.map(obj => ({
+                            id: obj.id,
+                            text: obj.name
+                        }))
+                    };
+                }
+            },
+            multiple: true
+        });
+    }
+
     // Initialize existing relationships
     const initialRelationships = JSON.parse(relationshipsField.value || "[]");
-    initialRelationships.forEach(rel => addRelationship(rel.type, rel.allowed_types.join(", ")));
+    initialRelationships.forEach(rel => addRelationship(rel.type, rel.allowed_types));
 
     // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");
