@@ -189,8 +189,8 @@
             const relationship_type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_types']").selectedOptions)
                 .map(option => option.value);
-            if (type) {
-                relationships.push({ relationship_type, allowed_types: allowedTypes });
+            if (relationship_type) {
+                relationships.push({ relationship_type: relationship_type, allowed_types: allowedTypes });
             }
         });
         relationshipsField.value = JSON.stringify(relationships);
