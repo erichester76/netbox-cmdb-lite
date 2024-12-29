@@ -49,7 +49,7 @@ class GenericObjectTypeDetailView(generic.ObjectView):
 
         # Replace the relationship type ID with its name in the relationships list
         for relationship in relationships:
-            relationship['relationship_types'] = relationship_type_map.get(str(relationship['relationship_types']), "Unknown")
+            relationship['relationship_type'] = relationship_type_map.get(str(relationship['relationship_type']), "Unknown")
 
         return {
             'fields': [

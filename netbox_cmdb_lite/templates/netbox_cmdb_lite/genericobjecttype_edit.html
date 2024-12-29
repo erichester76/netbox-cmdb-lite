@@ -164,7 +164,7 @@
         div.innerHTML = `
             <div class="col-md-1"></div>
             <div class="col-md-2">
-                {{form.relationship_types}}
+                {{form.relationship_type}}
             </div>
             <div class="col-md-4">
                 {{form.allowed_types}}
@@ -186,7 +186,7 @@
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
-            const type = row.querySelector("select[name='relationship_types']").value;
+            const type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_types']").selectedOptions)
                 .map(option => option.value);
             if (type) {
@@ -196,7 +196,7 @@
         relationshipsField.value = JSON.stringify(relationships);
     }
     const initialRelationships= JSON.parse(relationshipsField.value || "[]");
-    initialRelationships.forEach(attr => addRelationship(attr.relationship_types, attr.allowed_types));
+    initialRelationships.forEach(attr => addRelationship(attr.relationship_type, attr.allowed_types));
 
 </script>
 {% endblock %}
