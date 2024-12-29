@@ -40,7 +40,17 @@ class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()
     
     def get_extra_context(self, request, instance):
-        
+        relationships = instance.relationships or []
+
+        # Fetch all RelationshipType objects to map ID to name
+        relationship_type_map = {
+            str(rt.pk): rt.name for rt in models.RelationshipType.objects.all()
+        }
+
+        # Replace the relationship type ID with its name in the relationships list
+        for relationship in relationships:
+            relationship['type'] = relationship_type_map.get(str(relationship['type']), "Unknown")
+
         return {
             'fields': [
                 ('Name', instance.name),
