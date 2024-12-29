@@ -181,34 +181,14 @@
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
 
-        // Render relationship type dropdown
-        const relationshipTypeOptions = initialRelationships
-            .map(rel => `<option value="${rel.type}" ${rel.type === type ? "selected" : ""}>${rel.type}</option>`)
-            .join("");
-
-        // Render allowed object types dropdown
-        const allowedObjectTypeOptions = initialRelationships
-            .flatMap(rel => rel.allowed_types || [])
-            .map(objType => `<option value="${objType}" ${allowedTypes.includes(objType) ? "selected" : ""}>${objType}</option>`)
-            .join("");
-
-
-        console.log("Relationship Type Options:", relationshipTypeOptions);
-        console.log("Allowed Object Type Options:", allowedObjectTypeOptions);
-
         div.innerHTML = `
-            <div class="col-md-4">
-                <select name="relationship_type" class="form-control">
-                    ${relationshipTypeOptions}
-                </select>
+            <div class="form-group">
+                <label for="id_relationships">Default Relationships</label>
+                {{ form.relationships }}
             </div>
-            <div class="col-md-6">
-                <select name="allowed_object_types" class="form-control" multiple>
-                    ${allowedObjectTypeOptions}
-                </select>
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
+            <div class="form-group">
+                <label for="id_allowed_object_types">Allowed Object Types</label>
+                {{ form.allowed_object_types }}
             </div>
         `;
         relationshipsContainer.appendChild(div);
