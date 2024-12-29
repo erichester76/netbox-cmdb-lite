@@ -64,29 +64,31 @@ class GenericObjectTypeForm(NetBoxModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Prepare choices for Allowed Object Types
-        choices = []
+        # Prepare RelationshipType choices
+        relationship_type_choices = [
+            (rel.pk, rel.name) for rel in models.RelationshipType.objects.all()
+        ]
 
-        # Add GenericObjectType options
+        # Prepare Allowed Object Type choices
+        allowed_type_choices = []
         for obj in models.GenericObjectType.objects.all():
-            choices.append((f"generic:{obj.pk}", f"Generic: {obj.name}"))
-
-        # Add NetBox ContentType options
-        netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy', 'extras'])
+            allowed_type_choices.append((f"generic:{obj.pk}", f"Generic: {obj.name}"))
+        netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
         for ct in netbox_cts:
-            choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
-
-        # Prepopulate relationships for editing an existing object
-        instance = kwargs.get("instance")
-        if instance and instance.relationships:
-            self.fields["relationships"].initial = instance.relationships
+            allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
         # Dynamically populate choices for the frontend
         self.fields["allowed_object_types"] = forms.MultipleChoiceField(
-            choices=choices,
+            choices=allowed_type_choices,
             label="Allowed Object Types",
             required=False,
             help_text="Select allowed object types for this relationship."
+        )
+        self.fields["relationship_types"] = forms.ChoiceField(
+            choices=relationship_type_choices,
+            label="Relationship",
+            required=False,
+            help_text="Select a type for this relationship."
         )
             
 class GenericObjectForm(forms.ModelForm):

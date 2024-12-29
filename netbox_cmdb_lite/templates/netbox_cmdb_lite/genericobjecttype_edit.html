@@ -56,9 +56,9 @@
                             <label>Relationship Type</label>
                             <select name="relationship_type" class="form-control">
                                 {% for choice in form.fields.relationships.choices %}
-                                    <option value="{{ choice.0 }}" {% if choice.0 == relationship.type %}selected{% endif %}>
-                                        {{ choice.1 }}
-                                    </option>
+                                <option value="{{ choice.0 }}" {% if choice.0 == relationship.type %}selected{% endif %}>
+                                    {{ choice.1 }}
+                                </option>
                                 {% endfor %}
                             </select>
                         </div>
