@@ -23,12 +23,6 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Define default relationships for this object type. Specify relationship types and allowed object types."
     )
-    allowed_object_types = DynamicModelMultipleChoiceField(
-        queryset=models.GenericObjectType.objects.all(),
-        label="Allowed Object Types",
-        required=False,
-        help_text="Select allowed object types for this relationship."
-    )
     
     class Meta:
         model = models.GenericObjectType
@@ -66,32 +60,11 @@ class GenericObjectTypeForm(NetBoxModelForm):
                 raise forms.ValidationError("All 'allowed_types' entries must be strings.")
         return relationships
 
+   
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Populate initial values if editing an instance
-        instance = kwargs.get('instance')
-        if instance:
-            # Preload relationships
-            preloaded_relationships = []
-            for rel in instance.relationships or []:
-                rel_type = rel.get("type")
-                allowed_types = rel.get("allowed_types", [])
-                preloaded_relationships.append({
-                    "type": rel_type,
-                    "allowed_types": allowed_types,
-                })
-            self.fields['relationships'].initial = preloaded_relationships
-
-            # Set initial choices for allowed_object_types
-            self.fields['allowed_object_types'].initial = [
-                f"generic:{obj.pk}" for obj in models.GenericObjectType.objects.filter(pk__in=instance.allowed_object_types)
-            ]
-
-        # Dynamically populate choices
-        self.fields['allowed_object_types'].widget.choices = self.get_dynamic_choices()
-
-    def get_dynamic_choices(self):
+        # Prepare choices for Allowed Object Types
         choices = []
 
         # Add GenericObjectType options
@@ -103,7 +76,18 @@ class GenericObjectTypeForm(NetBoxModelForm):
         for ct in netbox_cts:
             choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
-        return choices
+        # Prepopulate relationships for editing an existing object
+        instance = kwargs.get("instance")
+        if instance and instance.relationships:
+            self.fields["relationships"].initial = instance.relationships
+
+        # Dynamically populate choices for the frontend
+        self.fields["allowed_object_types"] = forms.MultipleChoiceField(
+            choices=choices,
+            label="Allowed Object Types",
+            required=False,
+            help_text="Select allowed object types for this relationship."
+        )
             
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
