@@ -47,29 +47,38 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            
-            <!-- Hidden relationships field -->
             <input type="hidden" id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
-            <!-- Relationships Section -->
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <label>Default Relationships</label>
-                    <p class="form-text text-muted">Add one or more relationships for this object type, including the allowed types for each relationship.</p>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
             <div id="relationships-container">
-                <!-- Dynamic relationships will be injected here -->
+                {% for relationship in form.relationships.value|default:"[]" %}
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label>Relationship Type</label>
+                            <select name="relationship_type" class="form-control">
+                                {% for choice in form.fields.relationships.choices %}
+                                    <option value="{{ choice.0 }}" {% if choice.0 == relationship.type %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label>Allowed Object Types</label>
+                            <select name="allowed_object_types" class="form-control" multiple>
+                                {% for choice in form.fields.allowed_object_types.choices %}
+                                    <option value="{{ choice.0 }}" {% if choice.0 in relationship.allowed_types %}selected{% endif %}>
+                                        {{ choice.1 }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-            <div class="row mb-3">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <button type="button" class="btn btn-secondary btn-block" onclick="addRelationship()">Add Relationship</button>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
+            <button type="button" class="btn btn-secondary" onclick="addRelationship()">Add Relationship</button>
 
             <div class="row">
                 <div class="col-md-1"></div>
@@ -164,56 +173,63 @@
     const initialAttributes = JSON.parse(attributesField.value || "[]");
     initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
 
-    // Relationships
     const relationshipsContainer = document.getElementById("relationships-container");
     const relationshipsField = document.getElementById("id_relationships");
 
-    // Parse the initial relationships JSON
-    const initialRelationships = JSON.parse(relationshipsField.value || "[]");
-
-    // Render each existing relationship dynamically
-    initialRelationships.forEach(rel => {
-        addRelationship(rel.type, rel.allowed_types);
-    });
-
-    // Add a new relationship row
     function addRelationship(type = "", allowedTypes = []) {
         const div = document.createElement("div");
-        div.className = "row mb-3 align-items-center";
+        div.className = "row mb-3";
+
+        // Populate relationship type dropdown
+        const relationshipTypeOptions = `
+            {% for choice in form.fields.relationships.choices %}
+                <option value="{{ choice.0 }}" ${type === "{{ choice.0 }}" ? "selected" : ""}>{{ choice.1 }}</option>
+            {% endfor %}
+        `;
+
+        // Populate allowed object types dropdown
+        const allowedObjectTypeOptions = `
+            {% for choice in form.fields.allowed_object_types.choices %}
+                <option value="{{ choice.0 }}" ${allowedTypes.includes("{{ choice.0 }}") ? "selected" : ""}>{{ choice.1 }}</option>
+            {% endfor %}
+        `;
 
         div.innerHTML = `
-            <div class="form-group">
-                <label for="id_relationships">Default Relationships</label>
-                {{ form.relationships }}
+            <div class="col-md-4">
+                <select name="relationship_type" class="form-control">
+                    ${relationshipTypeOptions}
+                </select>
             </div>
-            <div class="form-group">
-                <label for="id_allowed_object_types">Allowed Object Types</label>
-                {{ form.allowed_object_types }}
+            <div class="col-md-6">
+                <select name="allowed_object_types" class="form-control" multiple>
+                    ${allowedObjectTypeOptions}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
             </div>
         `;
         relationshipsContainer.appendChild(div);
         updateRelationshipsField();
     }
 
-    // Remove a relationship row
     function removeRelationship(button) {
         button.closest(".row").remove();
         updateRelationshipsField();
     }
 
-    // Update the hidden relationships field
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
             const type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
-                .map(opt => opt.value);
+                .map(option => option.value);
 
             if (type) {
                 relationships.push({ type, allowed_types: allowedTypes });
             }
         });
-        relationshipsField.value = JSON.stringify(relationships); // Save updated relationships to the hidden field
+        relationshipsField.value = JSON.stringify(relationships);
     }
 
 </script>
