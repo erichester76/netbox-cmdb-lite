@@ -7,10 +7,15 @@ mgmt_items = [
             permissions=["cmdb_lite.view_objecttype"],
         ),
         PluginMenuItem(
+            link="plugins:netbox_cmdb_lite:category_list",
+            link_text="Object Categories",
+            permissions=["cmbd_lite.view_categories"],
+        ),
+        PluginMenuItem(
             link="plugins:netbox_cmdb_lite:relationshiptype_list",
             link_text="Relationship Types",
             permissions=["cmbd_lite.view_relationshiptype"],
-        ),
+        ),        
         PluginMenuItem(
             link="plugins:netbox_cmdb_lite:genericobject_list",
             link_text="Objects",

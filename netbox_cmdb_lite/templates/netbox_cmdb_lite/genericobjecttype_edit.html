@@ -166,33 +166,48 @@
             referenceInput.value = "";
         }
     }
+
+    // Initialize existing attributes
+    const initialAttributes = JSON.parse(attributesField.value || "[]");
+    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
+
+    // Relationships
     const relationshipsContainer = document.getElementById("relationships-container");
     const relationshipsField = document.getElementById("id_relationships");
 
-    // Initialize existing relationships
+    // Parse the initial relationships JSON
     const initialRelationships = JSON.parse(relationshipsField.value || "[]");
+
+    // Render each existing relationship dynamically
     initialRelationships.forEach(rel => {
         addRelationship(rel.type, rel.allowed_types);
     });
 
+    // Add a new relationship row
     function addRelationship(type = "", allowedTypes = []) {
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
+
+        // Render relationship type dropdown
+        const relationshipTypeOptions = initialRelationships
+            .map(rel => `<option value="${rel.type}" ${rel.type === type ? "selected" : ""}>${rel.type}</option>`)
+            .join("");
+
+        // Render allowed object types dropdown
+        const allowedObjectTypeOptions = initialRelationships
+            .flatMap(rel => rel.allowed_types || [])
+            .map(objType => `<option value="${objType}" ${allowedTypes.includes(objType) ? "selected" : ""}>${objType}</option>`)
+            .join("");
+
         div.innerHTML = `
             <div class="col-md-4">
-                <select name="relationship_type" class="form-control dynamic-select">
-                    <!-- Relationship types will be dynamically loaded -->
-                    <option value="${type}" selected>${type}</option>
+                <select name="relationship_type" class="form-control">
+                    ${relationshipTypeOptions}
                 </select>
             </div>
             <div class="col-md-6">
-                <select name="allowed_object_types" class="form-control dynamic-multi-select" multiple>
-                    <!-- Allowed object types will be dynamically preloaded -->
-                    ${allowedTypes
-                    .map(
-                        objType => `<option value="${objType}" selected>${objType}</option>`
-                    )
-                    .join("")}
+                <select name="allowed_object_types" class="form-control" multiple>
+                    ${allowedObjectTypeOptions}
                 </select>
             </div>
             <div class="col-md-2">
@@ -201,31 +216,29 @@
         `;
         relationshipsContainer.appendChild(div);
 
-        initializeDynamicFields();
         updateRelationshipsField();
     }
 
+    // Remove a relationship row
     function removeRelationship(button) {
         button.closest(".row").remove();
         updateRelationshipsField();
     }
 
+    // Update the hidden relationships field
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
             const type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
-                .map(option => option.value);
+                .map(opt => opt.value);
+
             if (type) {
                 relationships.push({ type, allowed_types: allowedTypes });
             }
         });
-        relationshipsField.value = JSON.stringify(relationships); // Save to hidden input field
+        relationshipsField.value = JSON.stringify(relationships); // Save updated relationships to the hidden field
     }
 
-
-    // Initialize existing attributes
-    const initialAttributes = JSON.parse(attributesField.value || "[]");
-    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
 </script>
 {% endblock %}
