@@ -48,10 +48,10 @@
                 <div class="col-md-1"></div>
             </div>
             
-            <!-- Hidden attributes field -->
+            <!-- Hidden relationships field -->
             <input type="hidden" id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
-            <!-- Attributes Section -->
+            <!-- Relationships Section -->
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -100,7 +100,6 @@
                     <option value="integer" ${type === "integer" ? "selected" : ""}>Integer</option>
                     <option value="boolean" ${type === "boolean" ? "selected" : ""}>Boolean</option>
                     <option value="multi-choice" ${type === "multi-choice" ? "selected" : ""}>Multi-Choice</option>
-                    <option value="foreign-key" ${type === "foreign-key" ? "selected" : ""}>Foreign Key</option>
                 </select>
             </div>
             <div class="col-md-4">
@@ -136,7 +135,6 @@
             if (name) {
                 const attribute = { name, type };
                 if (type === "multi-choice") attribute.options = options;
-                if (type === "foreign-key") attribute.reference = reference;
                 attributes.push(attribute);
             }
         });
@@ -154,11 +152,6 @@
             optionsInput.value = options;
             referenceInput.style.display = "none";
             referenceInput.value = "";
-        } else if (select.value === "foreign-key") {
-            referenceInput.style.display = "block";
-            referenceInput.value = reference;
-            optionsInput.style.display = "none";
-            optionsInput.value = "";
         } else {
             optionsInput.style.display = "none";
             optionsInput.value = "";
@@ -199,6 +192,10 @@
             .map(objType => `<option value="${objType}" ${allowedTypes.includes(objType) ? "selected" : ""}>${objType}</option>`)
             .join("");
 
+
+        console.log("Relationship Type Options:", relationshipTypeOptions);
+        console.log("Allowed Object Type Options:", allowedObjectTypeOptions);
+
         div.innerHTML = `
             <div class="col-md-4">
                 <select name="relationship_type" class="form-control">
@@ -215,7 +212,6 @@
             </div>
         `;
         relationshipsContainer.appendChild(div);
-
         updateRelationshipsField();
     }
 

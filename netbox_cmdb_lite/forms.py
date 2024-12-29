@@ -18,11 +18,6 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Select a category for this object type"
     )
-    relationships = JSONField(
-        label="Default Relationships",
-        required=False,
-        help_text="Define default relationships for this object type. Specify relationship types and allowed object types."
-    )
     
     class Meta:
         model = models.GenericObjectType
@@ -30,10 +25,8 @@ class GenericObjectTypeForm(NetBoxModelForm):
 
 def clean_attributes(self):
     attributes = self.cleaned_data.get("attributes", [])
-
     if not isinstance(attributes, list):
         raise forms.ValidationError("Attributes must be a list of dictionaries.")
-
     for attr in attributes:
         if not isinstance(attr, dict):
             raise forms.ValidationError("Each attribute must be a dictionary.")
@@ -45,34 +38,21 @@ def clean_attributes(self):
         if attr["type"] == "foreign-key" and "reference" in attr:
             if not isinstance(attr["reference"], str):
                 raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
-    
     return attributes
 
 def clean_relationships(self):
     relationships = self.cleaned_data.get("relationships", "[]")
-  
-       
     if not isinstance(relationships, list):
         raise forms.ValidationError("Relationships must be a list of objects.")
-    
     for relationship in relationships:
         if "type" not in relationship or "allowed_types" not in relationship:
-            raise forms.ValidationError(
-                "Each relationship must include a 'type' and 'allowed_types'."
-            )
+            raise forms.ValidationError("Each relationship must include a 'type' and 'allowed_types'.")
         if not isinstance(relationship["type"], str):
-            raise forms.ValidationError(
-                f"Relationship 'type' must be a string. Found: {relationship['type']}"
-            )
+            raise forms.ValidationError(f"Relationship 'type' must be a string. Found: {relationship['type']}")
         if not isinstance(relationship["allowed_types"], list):
-            raise forms.ValidationError(
-                f"'allowed_types' must be a list of strings. Found: {relationship['allowed_types']}"
-            )
+            raise forms.ValidationError(f"'allowed_types' must be a list of strings. Found: {relationship['allowed_types']}")
         if not all(isinstance(typ, str) for typ in relationship["allowed_types"]):
-            raise forms.ValidationError(
-                "All 'allowed_types' entries must be strings."
-            )
-
+            raise forms.ValidationError("All 'allowed_types' entries must be strings.")
     return relationships
 
 def __init__(self, *args, **kwargs):
