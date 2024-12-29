@@ -60,7 +60,20 @@ class GenericObjectTypeForm(NetBoxModelForm):
                 raise forms.ValidationError("All 'allowed_object_types' entries must be strings.")
         return relationships
 
-   
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Save the relationships JSON field
+        relationships = self.cleaned_data.get("relationships", "[]")
+        attributes = self.cleaned_data.get("attributes", [])
+        instance.relationships = relationships
+        instance.attributes = attributes
+        
+        if commit:
+            instance.save()
+
+        return instance
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
