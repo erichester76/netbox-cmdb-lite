@@ -1,7 +1,7 @@
 from django.contrib.contenttypes.models import ContentType
 from django import forms
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, JSONField
+from utilities.forms.fields import DynamicModelChoiceField, JSONField
 from . import models
 
 

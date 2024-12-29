@@ -188,7 +188,7 @@
         relationshipsField.value = JSON.stringify(relationships);
     }
     const initialRelationships= JSON.parse(relationshipsField.value || "[]");
-    initialRelationships.forEach(attr => addRelationship(attr.relationshiptype, attr.allowed_object_types));
+    initialRelationships.forEach(attr => addRelationship(attr.relationship_types, attr.allowed_object_types));
 
 </script>
 {% endblock %}
