@@ -51,12 +51,12 @@ class GenericObjectTypeForm(NetBoxModelForm):
             raise forms.ValidationError("Relationships must be a list of objects.")
         for relationship in relationships:
             if "type" not in relationship or "allowed_object_types" not in relationship:
-                raise forms.ValidationError("Each relationship must include a 'type' and 'allowed_object_types'.")
+                raise forms.ValidationError("Each relationship must include a 'relationship_types' and 'allowed_object_types'.")
             if not isinstance(relationship["relationship_types"], str):
                 raise forms.ValidationError(f"Relationship 'type' must be a string. Found: {relationship['relationship_types']}")
             if not isinstance(relationship["allowed_object_types"], list):
-                raise forms.ValidationError(f"'allowed_allowed_types' must be a list of strings. Found: {relationship['allowed_object_types']}")
-            if not all(isinstance(typ, str) for typ in relationship["allowed_types"]):
+                raise forms.ValidationError(f"'allowed_object_types' must be a list of strings. Found: {relationship['allowed_object_types']}")
+            if not all(isinstance(typ, str) for typ in relationship["allowed_object_types"]):
                 raise forms.ValidationError("All 'allowed_object_types' entries must be strings.")
         return relationships
 
@@ -72,7 +72,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         # Prepare Allowed Object Type choices
         allowed_type_choices = []
         for obj in models.GenericObjectType.objects.all():
-            allowed_type_choices.append((f"generic:{obj.pk}", f"Generic: {obj.name}"))
+            allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
         netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
         for ct in netbox_cts:
             allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))

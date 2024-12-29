@@ -34,6 +34,7 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
     def form_valid(self, form):
         instance = form.save(commit=False)
         print("Attributes before saving:", instance.attributes)  # Debugging output
+        print("Relationships before saving:", instance.relationships)  # Debugging output
         instance.save()
         return super().form_valid(form)
 
@@ -49,7 +50,8 @@ class GenericObjectTypeDetailView(generic.ObjectView):
                 ('Category', instance.category),
                 ('Last Updated', instance.last_updated),
             ],
-            'attributes': instance.attributes
+            'attributes': instance.attributes,
+            'relationships': instance.relationships
         }
            
 class GenericObjectTypeDeleteView(generic.ObjectDeleteView):
