@@ -26,7 +26,7 @@
             </div>
 
             <!-- Hidden attributes field -->
-            <input type="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
+            <input id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
             <!-- Attributes Section -->
             <div class="row">
@@ -47,7 +47,7 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            <input type="hidden" id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
+            <input id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
             <div id="relationships-container">
                 {% for relationship in form.relationships.value|default:"[]" %}
@@ -224,7 +224,6 @@
             const type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
                 .map(option => option.value);
-
             if (type) {
                 relationships.push({ type, allowed_types: allowedTypes });
             }
