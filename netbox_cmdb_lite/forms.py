@@ -64,17 +64,13 @@ class GenericObjectTypeForm(NetBoxModelForm):
         super().__init__(*args, **kwargs)
 
         # Prepare RelationshipType choices
-        relationship_type_choices = [
-            (rel.pk, rel.name) for rel in models.RelationshipType.objects.all()
-        ]
+        relationship_type_choices = [(rel.pk, rel.name) for rel in models.RelationshipType.objects.all()]
 
         # Prepare Allowed Object Type choices
         allowed_type_choices = []
-        for obj in models.GenericObjectType.objects.all():
-            allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
+        for obj in models.GenericObjectType.objects.all(): allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
         netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
-        for ct in netbox_cts:
-            allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
+        for ct in netbox_cts: allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
         # Dynamically populate choices for the frontend
         self.fields["allowed_types"] = forms.MultipleChoiceField(
