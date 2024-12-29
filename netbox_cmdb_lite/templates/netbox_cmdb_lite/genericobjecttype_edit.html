@@ -143,7 +143,6 @@
         }
     }
 
-    // Initialize existing attributes
     const initialAttributes = JSON.parse(attributesField.value || "[]");
     initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
 
@@ -151,30 +150,13 @@
     const relationshipsField = document.getElementById("id_relationships");
 
     function addRelationship(type = "", allowedTypes = []) {
-        const div = document.createElement("div");
-        div.className = "row mb-3";
-
-        // Populate relationship type dropdown
-        const relationshipTypeOptions = `
-            {% for choice in form.fields.relationships.choices %}
-                <option value="{{ choice.0 }}" ${type === "{{ choice.0 }}" ? "selected" : ""}>{{ choice.1 }}</option>
-            {% endfor %}
-        `;
-
-        // Populate allowed object types dropdown
-        const allowedObjectTypeOptions = `
-            {% for choice in form.fields.allowed_object_types.choices %}
-                <option value="{{ choice.0 }}" ${allowedTypes.includes("{{ choice.0 }}") ? "selected" : ""}>{{ choice.1 }}</option>
-            {% endfor %}
-        `;
-
-        function addAttribute(name = "", type = "string", options = "", reference = "") {
+       
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
         div.innerHTML = `
             <div class="col-md-1"></div>
             <div class="col-md-2">
-                {{form.relationship_type}}
+                {{form.relationship_types}}
             </div>
             <div class="col-md-4">
                 {{form.allowed_object_types}}
@@ -184,9 +166,6 @@
             </div>
             <div class="col-md-1"></div>
         `;
-        container.appendChild(div);
-        updateAttributesField();
-    }
         relationshipsContainer.appendChild(div);
         updateRelationshipsField();
     }
@@ -199,7 +178,7 @@
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
-            const type = row.querySelector("select[name='relationship_type']").value;
+            const type = row.querySelector("select[name='relationship_types']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
                 .map(option => option.value);
             if (type) {
