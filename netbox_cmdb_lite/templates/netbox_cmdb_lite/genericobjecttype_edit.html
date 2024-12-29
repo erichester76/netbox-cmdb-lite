@@ -169,6 +169,12 @@
     const relationshipsContainer = document.getElementById("relationships-container");
     const relationshipsField = document.getElementById("id_relationships");
 
+    // Initialize existing relationships
+    const initialRelationships = JSON.parse(relationshipsField.value || "[]");
+    initialRelationships.forEach(rel => {
+        addRelationship(rel.type, rel.allowed_types);
+    });
+
     function addRelationship(type = "", allowedTypes = []) {
         const div = document.createElement("div");
         div.className = "row mb-3 align-items-center";
@@ -176,14 +182,17 @@
             <div class="col-md-4">
                 <select name="relationship_type" class="form-control dynamic-select">
                     <!-- Relationship types will be dynamically loaded -->
+                    <option value="${type}" selected>${type}</option>
                 </select>
             </div>
             <div class="col-md-6">
-                <select name="allowed_object_types" class="form-control" multiple>
-                    ${allowedTypes.map(
-                        objType =>
-                            `<option value="${objType}" selected>${objType}</option>`
-                    ).join('')}
+                <select name="allowed_object_types" class="form-control dynamic-multi-select" multiple>
+                    <!-- Allowed object types will be dynamically preloaded -->
+                    ${allowedTypes
+                    .map(
+                        objType => `<option value="${objType}" selected>${objType}</option>`
+                    )
+                    .join("")}
                 </select>
             </div>
             <div class="col-md-2">
@@ -192,6 +201,7 @@
         `;
         relationshipsContainer.appendChild(div);
 
+        initializeDynamicFields();
         updateRelationshipsField();
     }
 
@@ -213,8 +223,9 @@
         relationshipsField.value = JSON.stringify(relationships); // Save to hidden input field
     }
 
-    // Initialize existing relationships
-    const initialRelationships = JSON.parse(relationshipsField.value || "[]");
-    initialRelationships.forEach(rel => addRelationship(rel.type, rel.allowed_types));
+
+    // Initialize existing attributes
+    const initialAttributes = JSON.parse(attributesField.value || "[]");
+    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
 </script>
 {% endblock %}

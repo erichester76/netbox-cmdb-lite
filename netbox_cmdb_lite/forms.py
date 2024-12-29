@@ -78,22 +78,31 @@ def clean_relationships(self):
 def __init__(self, *args, **kwargs):
     super().__init__(*args, **kwargs)
 
-    # Dynamic field for relationship type
-    self.fields['relationship_type'] = DynamicModelChoiceField(
-        queryset=models.RelationshipType.objects.all(),
-        label="Relationship Type",
-        required=False
-    )
-
-    # MultipleChoiceField for allowed object types
+    # Prepare choices for allowed_object_types
     choices = []
     # Add GenericObjectType options
-    for obj in models.GenericObjectType.objects.all():
-        choices.append((f"generic:{obj.pk}", f"cmdb.{obj.name}"))
+    generic_qs = models.GenericObjectType.objects.all()
+    for obj in generic_qs:
+        choices.append((f"generic:{obj.pk}", f"Generic: {obj.name}"))
     # Add NetBox ContentType options
-    netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
+    netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy', 'extras'])
     for ct in netbox_cts:
-        choices.append((f"netbox:{ct.pk}", f"{ct.app_label}.{ct.model}"))
+        choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
+
+    # Prepopulate relationships field for editing
+    instance = kwargs.get('instance')
+    if instance and instance.relationships:
+        preloaded_relationships = []
+        for rel in instance.relationships:
+            # Extract type and allowed_types
+            rel_type = rel.get("type")
+            allowed_types = rel.get("allowed_types", [])
+            preloaded_relationships.append({
+                "type": rel_type,
+                "allowed_types": allowed_types
+            })
+        # Save the preloaded relationships to the field
+        self.fields['relationships'].initial = preloaded_relationships
 
     self.fields['allowed_object_types'] = forms.MultipleChoiceField(
         choices=choices,
@@ -101,6 +110,7 @@ def __init__(self, *args, **kwargs):
         required=False,
         help_text="Select allowed object types for this relationship."
     )
+
         
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
