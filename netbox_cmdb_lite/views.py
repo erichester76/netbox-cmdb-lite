@@ -33,8 +33,6 @@ class GenericObjectTypeEditView(generic.ObjectEditView):
     
     def form_valid(self, form):
         instance = form.save(commit=False)
-        print("Attributes before saving:", instance.attributes)  # Debugging output
-        print("Relationships before saving:", instance.relationships)  # Debugging output
         instance.save()
         return super().form_valid(form)
 
