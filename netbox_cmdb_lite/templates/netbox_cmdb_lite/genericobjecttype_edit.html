@@ -5,7 +5,7 @@
     <div class="panel-heading">
     </div>
     <div class="panel-body">
-        <form method="post" onsubmit="updateAttributesField();">
+        <form method="post" onsubmit="updateAttributesField();updateRelationshipsField();">
             {% csrf_token %}
             <!-- Name and Category on the same row -->
             <div class="row mb-3">
