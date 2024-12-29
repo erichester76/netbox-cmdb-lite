@@ -50,33 +50,7 @@
             <input id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
             <div id="relationships-container">
-                {% for relationship in form.relationships.value|default:"[]" %}
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label>Relationship Type</label>
-                            <select name="relationship_type" class="form-control">
-                                {% for choice in form.fields.relationships.choices %}
-                                <option value="{{ choice.0 }}" {% if choice.0 == relationship.type %}selected{% endif %}>
-                                    {{ choice.1 }}
-                                </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label>Allowed Object Types</label>
-                            <select name="allowed_object_types" class="form-control" multiple>
-                                {% for choice in form.fields.allowed_object_types.choices %}
-                                    <option value="{{ choice.0 }}" {% if choice.0 in relationship.allowed_types %}selected{% endif %}>
-                                        {{ choice.1 }}
-                                    </option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="col-md-2">
-                            <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
-                        </div>
-                    </div>
-                {% endfor %}
+                <!-- Dynamic relationships will be injected here -->
             </div>
             <button type="button" class="btn btn-secondary" onclick="addRelationship()">Add Relationship</button>
 
@@ -194,21 +168,25 @@
             {% endfor %}
         `;
 
+        function addAttribute(name = "", type = "string", options = "", reference = "") {
+        const div = document.createElement("div");
+        div.className = "row mb-3 align-items-center";
         div.innerHTML = `
-            <div class="col-md-4">
-                <select name="relationship_type" class="form-control">
-                    ${relationshipTypeOptions}
-                </select>
+            <div class="col-md-1"></div>
+            <div class="col-md-2">
+                {{form.relationship_type}}
             </div>
-            <div class="col-md-6">
-                <select name="allowed_object_types" class="form-control" multiple>
-                    ${allowedObjectTypeOptions}
-                </select>
+            <div class="col-md-4">
+                {{form.allowed_object_types}}
             </div>
             <div class="col-md-2">
-                <button type="button" class="btn btn-danger" onclick="removeRelationship(this)">Remove</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationshop(this)">Remove</button>
             </div>
+            <div class="col-md-1"></div>
         `;
+        container.appendChild(div);
+        updateAttributesField();
+    }
         relationshipsContainer.appendChild(div);
         updateRelationshipsField();
     }
@@ -230,6 +208,8 @@
         });
         relationshipsField.value = JSON.stringify(relationships);
     }
+    const initialRelationships= JSON.parse(relationshipsField.value || "[]");
+    initialRelationships.forEach(attr => addRelationship(attr.relationshiptype, attr.allowed_object_types));
 
 </script>
 {% endblock %}
