@@ -50,14 +50,14 @@ class GenericObjectTypeForm(NetBoxModelForm):
         if not isinstance(relationships, list):
             raise forms.ValidationError("Relationships must be a list of objects.")
         for relationship in relationships:
-            if "type" not in relationship or "allowed_types" not in relationship:
-                raise forms.ValidationError("Each relationship must include a 'type' and 'allowed_types'.")
-            if not isinstance(relationship["type"], str):
-                raise forms.ValidationError(f"Relationship 'type' must be a string. Found: {relationship['type']}")
-            if not isinstance(relationship["allowed_types"], list):
-                raise forms.ValidationError(f"'allowed_types' must be a list of strings. Found: {relationship['allowed_types']}")
+            if "type" not in relationship or "allowed_object_types" not in relationship:
+                raise forms.ValidationError("Each relationship must include a 'type' and 'allowed_object_types'.")
+            if not isinstance(relationship["relationship_types"], str):
+                raise forms.ValidationError(f"Relationship 'type' must be a string. Found: {relationship['relationship_types']}")
+            if not isinstance(relationship["allowed_object_types"], list):
+                raise forms.ValidationError(f"'allowed_allowed_types' must be a list of strings. Found: {relationship['allowed_object_types']}")
             if not all(isinstance(typ, str) for typ in relationship["allowed_types"]):
-                raise forms.ValidationError("All 'allowed_types' entries must be strings.")
+                raise forms.ValidationError("All 'allowed_object_types' entries must be strings.")
         return relationships
 
    
