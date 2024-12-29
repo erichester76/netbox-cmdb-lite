@@ -179,8 +179,11 @@
                 </select>
             </div>
             <div class="col-md-6">
-                <select name="allowed_object_types" class="form-control dynamic-multi-select" multiple>
-                    <!-- Allowed object types will be dynamically loaded -->
+                <select name="allowed_object_types" class="form-control" multiple>
+                    ${allowedTypes.map(
+                        objType =>
+                            `<option value="${objType}" selected>${objType}</option>`
+                    ).join('')}
                 </select>
             </div>
             <div class="col-md-2">
@@ -189,9 +192,7 @@
         `;
         relationshipsContainer.appendChild(div);
 
-        // Initialize dynamic fields
-        initializeDynamicSelect(div.querySelector("select[name='relationship_type']"), "/api/plugins/cmdb-lite/relationship-types/");
-        initializeDynamicMultiSelect(div.querySelector("select[name='allowed_object_types']"), "/api/plugins/cmdb-lite/object-types/");
+        updateRelationshipsField();
     }
 
     function removeRelationship(button) {
@@ -212,48 +213,8 @@
         relationshipsField.value = JSON.stringify(relationships); // Save to hidden input field
     }
 
-    // Initialize dynamic fields on page load
-    function initializeDynamicSelect(select, url) {
-        $(select).select2({
-            ajax: {
-                url: url,
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                        results: data.results.map(obj => ({
-                            id: obj.id,
-                            text: obj.name
-                        }))
-                    };
-                }
-            }
-        });
-    }
-
-    function initializeDynamicMultiSelect(select, url) {
-        $(select).select2({
-            ajax: {
-                url: url,
-                dataType: 'json',
-                processResults: function (data) {
-                    return {
-                        results: data.results.map(obj => ({
-                            id: obj.id,
-                            text: obj.name
-                        }))
-                    };
-                }
-            },
-            multiple: true
-        });
-    }
-
     // Initialize existing relationships
     const initialRelationships = JSON.parse(relationshipsField.value || "[]");
     initialRelationships.forEach(rel => addRelationship(rel.type, rel.allowed_types));
-
-    // Initialize existing attributes
-    const initialAttributes = JSON.parse(attributesField.value || "[]");
-    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
 </script>
 {% endblock %}

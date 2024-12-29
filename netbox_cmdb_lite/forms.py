@@ -85,13 +85,23 @@ def __init__(self, *args, **kwargs):
         required=False
     )
 
-    # Dynamic multiple-choice field for allowed object types
-    self.fields['allowed_object_types'] = DynamicModelMultipleChoiceField(
-        queryset=models.GenericObjectType.objects.all(),
-        label="Allowed Object Types",
-        required=False
-    )
+    # MultipleChoiceField for allowed object types
+    choices = []
+    # Add GenericObjectType options
+    for obj in models.GenericObjectType.objects.all():
+        choices.append((f"generic:{obj.pk}", f"cmdb.{obj.name}"))
+    # Add NetBox ContentType options
+    netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
+    for ct in netbox_cts:
+        choices.append((f"netbox:{ct.pk}", f"{ct.app_label}.{ct.model}"))
 
+    self.fields['allowed_object_types'] = forms.MultipleChoiceField(
+        choices=choices,
+        label="Allowed Object Types",
+        required=False,
+        help_text="Select allowed object types for this relationship."
+    )
+        
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
         queryset=models.GenericObjectType.objects.all(),
