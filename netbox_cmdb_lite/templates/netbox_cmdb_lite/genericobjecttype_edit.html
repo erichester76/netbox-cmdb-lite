@@ -186,11 +186,11 @@
     function updateRelationshipsField() {
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
-            const type = row.querySelector("select[name='relationship_type']").value;
+            const relationship_type = row.querySelector("select[name='relationship_type']").value;
             const allowedTypes = Array.from(row.querySelector("select[name='allowed_types']").selectedOptions)
                 .map(option => option.value);
             if (type) {
-                relationships.push({ type, allowed_types: allowedTypes });
+                relationships.push({ relationship_type, allowed_types: allowedTypes });
             }
         });
         relationshipsField.value = JSON.stringify(relationships);
