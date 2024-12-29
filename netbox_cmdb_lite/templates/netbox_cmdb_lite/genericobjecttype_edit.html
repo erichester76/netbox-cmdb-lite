@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-            
+
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -167,7 +167,7 @@
                 {{form.relationship_types}}
             </div>
             <div class="col-md-4">
-                {{form.allowed_object_types}}
+                {{form.allowed_types}}
             </div>
             <div class="col-md-2">
                 <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationshop(this)">Remove</button>
@@ -187,7 +187,7 @@
         const relationships = [];
         relationshipsContainer.querySelectorAll(".row").forEach(row => {
             const type = row.querySelector("select[name='relationship_types']").value;
-            const allowedTypes = Array.from(row.querySelector("select[name='allowed_object_types']").selectedOptions)
+            const allowedTypes = Array.from(row.querySelector("select[name='allowed_types']").selectedOptions)
                 .map(option => option.value);
             if (type) {
                 relationships.push({ type, allowed_types: allowedTypes });
@@ -196,7 +196,7 @@
         relationshipsField.value = JSON.stringify(relationships);
     }
     const initialRelationships= JSON.parse(relationshipsField.value || "[]");
-    initialRelationships.forEach(attr => addRelationship(attr.relationship_types, attr.allowed_object_types));
+    initialRelationships.forEach(attr => addRelationship(attr.relationship_types, attr.allowed_types));
 
 </script>
 {% endblock %}

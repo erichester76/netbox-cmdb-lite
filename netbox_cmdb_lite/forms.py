@@ -46,33 +46,19 @@ class GenericObjectTypeForm(NetBoxModelForm):
         return attributes
 
     def clean_relationships(self):
-        relationships = self.cleaned_data.get("relationships", "[]")
+        relationships = self.cleaned_data.get("relationships", [])
         if not isinstance(relationships, list):
             raise forms.ValidationError("Relationships must be a list of objects.")
         for relationship in relationships:
-            if "type" not in relationship or "allowed_object_types" not in relationship:
-                raise forms.ValidationError("Each relationship must include a 'relationship_types' and 'allowed_object_types'.")
+            if "type" not in relationship or "allowed_types" not in relationship:
+                raise forms.ValidationError("Each relationship must include a 'relationship_types' and 'allowed_types'.")
             if not isinstance(relationship["relationship_types"], str):
                 raise forms.ValidationError(f"Relationship 'type' must be a string. Found: {relationship['relationship_types']}")
-            if not isinstance(relationship["allowed_object_types"], list):
-                raise forms.ValidationError(f"'allowed_object_types' must be a list of strings. Found: {relationship['allowed_object_types']}")
-            if not all(isinstance(typ, str) for typ in relationship["allowed_object_types"]):
-                raise forms.ValidationError("All 'allowed_object_types' entries must be strings.")
+            if not isinstance(relationship["allowed_types"], list):
+                raise forms.ValidationError(f"'allowed_types' must be a list of strings. Found: {relationship['allowed_types']}")
+            if not all(isinstance(typ, str) for typ in relationship["allowed_types"]):
+                raise forms.ValidationError("All 'allowed_types' entries must be strings.")
         return relationships
-
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-
-        # Save the relationships JSON field
-        relationships = self.cleaned_data.get("relationships", "[]")
-        attributes = self.cleaned_data.get("attributes", [])
-        instance.relationships = relationships
-        instance.attributes = attributes
-        
-        if commit:
-            instance.save()
-
-        return instance
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -91,7 +77,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
             allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
         # Dynamically populate choices for the frontend
-        self.fields["allowed_object_types"] = forms.MultipleChoiceField(
+        self.fields["allowed_types"] = forms.MultipleChoiceField(
             choices=allowed_type_choices,
             label="Allowed Object Types",
             required=False,
