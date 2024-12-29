@@ -29,6 +29,12 @@ class GenericObjectType(NetBoxModel):
         related_name="object_types",
         help_text="Category this object type belongs to"
     )
+    relationships = models.JSONField(
+        default=list, 
+        blank=True, 
+        null=True,
+        help_text="Define the fields and their types for this object type."
+    )
 
     def __str__(self):
         return self.name
