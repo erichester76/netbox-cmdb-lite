@@ -49,13 +49,11 @@
             </div>
 
             <div id="relationships-container">
-                <div id="relationships-container">
-                    {% for relationship in form.initial_relationships %}
-
+                {% for relationship in form.initial_relationships %}
+                <div class="row mb-3 relationship-row align-items-center">
                     <div class="col-md-1"></div>
                     <div class="col-md-2">
                       <div class="form-group">
-                        <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
                         <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
                         <select name="relationship_type_{{ forloop.counter }}" class="form-control">
                             {% for value, label in form.relationship_type_choices %}
@@ -76,14 +74,15 @@
                                 </option>
                             {% endfor %}
                         </select>
-                    </div>
+                      </div>
                     </div>
                     <div class="col-md-1">
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationshop(this)">Remove</button>
                     </div>
-                    <div class="col-md-1"></div>
-                    {% endfor %}
                 </div>
+                {% endfor %}
+            </div>
+            
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
