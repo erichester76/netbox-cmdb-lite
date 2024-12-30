@@ -11,25 +11,9 @@
                     <tbody>
                         {% for attribute in attributes %}
                             <tr>
-                                <th scope="row" class="text-muted">Field Name</th>
-                                <td>{{ attribute.name }}</td>
+                                <th scope="row" class="text-muted">{{ attribute.name }}</th>
+                                <td>{{ attribute.type }}  {{ attribute.options|join:", " }} </td>
                             </tr>
-                            <tr>
-                                <th scope="row" class="text-muted">Type</th>
-                                <td>{{ attribute.type }}</td>
-                            </tr>
-                            {% if attribute.type == "multi-choice" %}
-                                <tr>
-                                    <th scope="row" class="text-muted">Options</th>
-                                    <td>{{ attribute.options|join:", " }}</td>
-                                </tr>
-                            {% endif %}
-                            {% if attribute.type == "foreign-key" %}
-                                <tr>
-                                    <th scope="row" class="text-muted">Reference</th>
-                                    <td>{{ attribute.reference }}</td>
-                                </tr>
-                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>
@@ -49,18 +33,8 @@
                     <tbody>
                         {% for relationship in relationships %}
                             <tr>
-                                <th scope="row" class="text-muted">Relationship Type</th>
-                                <td>{{ relationship.relationship_type }}</td>
-                            </tr>
-                            <tr>
-                                <th scope="row" class="text-muted">Allowed Object Types</th>
-                                <td>
-                                    {% if relationship.allowed_types %}
-                                        {{ relationship.allowed_types|join:", " }}
-                                    {% else %}
-                                        <span class="text-muted">None</span>
-                                    {% endif %}
-                                </td>
+                                <th scope="row" class="text-muted">{{ relationship.relationship_type }}</th>
+                                <td> {{ relationship.allowed_types|join:", " }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
