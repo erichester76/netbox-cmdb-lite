@@ -4,7 +4,7 @@
 <div class="row mb-3">
     <div class="col col-md-6">
     <div class="card mb-3">
-        <h5 class="card-header">attributes</h5>
+        <h5 class="card-header">Attributes</h5>
         <div class="card-body">
             {% if attributes %}
                 <table class="table table-sm table-borderless">
@@ -12,7 +12,7 @@
                         {% for attribute in attributes %}
                             <tr>
                                 <th scope="row" class="text-muted">{{ attribute.name }}</th>
-                                <td>{{ attribute.type }}  {{ attribute.options|join:", " }} </td>
+                                <td>{{ attribute.type }}  ({{ attribute.options|join:", " }}) </td>
                             </tr>
                         {% endfor %}
                     </tbody>

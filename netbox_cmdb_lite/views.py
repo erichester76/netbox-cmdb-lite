@@ -3,7 +3,7 @@ from . import models
 from . import tables
 from . import forms
 from django.http import JsonResponse
-import json
+from django.contrib.contenttypes.models import ContentType
 
 
 class CategoryListView(generic.ObjectListView):
@@ -42,15 +42,17 @@ class GenericObjectTypeDetailView(generic.ObjectView):
     def get_extra_context(self, request, instance):
         relationships = instance.relationships or []
 
-        # Fetch all RelationshipType objects to map ID to name
-        relationship_type_map = {
-            str(rt.pk): rt.name for rt in models.RelationshipType.objects.all()
-        }
+        relationship_type_map = {str(rt.pk): rt.name for rt in models.RelationshipType.objects.all()}
+        generic_object_type_map = {f"cmdb:{obj.pk}": obj.name for obj in models.GenericObjectType.objects.all()}
+        netbox_content_type_map = {f"netbox:{ct.pk}": f"{ct.app_label}.{ct.model}" for ct in ContentType.objects.filter(
+                                    app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy', 'extras'])}
+        allowed_type_map = {**generic_object_type_map, **netbox_content_type_map}
 
         # Replace the relationship type ID with its name in the relationships list
         for relationship in relationships:
             relationship['relationship_type'] = relationship_type_map.get(str(relationship['relationship_type']), "Unknown")
-
+            relationship["allowed_types"] = [allowed_type_map.get(allowed_type, "Unknown") for allowed_type in relationship["allowed_types"]]
+       
         return {
             'fields': [
                 ('Name', instance.name),
