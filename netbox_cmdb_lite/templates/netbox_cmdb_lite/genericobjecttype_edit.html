@@ -56,7 +56,7 @@
                         <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
                         <select name="relationship_type_{{ forloop.counter }}" class="form-control">
                             {% for value, label in form.relationship_type_choices %}
-                                <option value="{{ value }}"{% if value|int == relationship.relationship_type|int %}selected="selected"{% endif %}>
+                                <option value="{{ value }}"{% if value == relationship.relationship_type %}selected="selected"{% endif %}>
                                     {{ label }}
                                 </option>
                             {% endfor %}
