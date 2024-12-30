@@ -5,7 +5,7 @@
     <div class="panel-heading">
     </div>
     <div class="panel-body">
-        <form method="post" onsubmit="updateAttributesField();updateRelationshipsField();">
+        <form method="post" onsubmit="updateAttributesField();">
             {% csrf_token %}
             <!-- Name and Category on the same row -->
             <div class="row mb-3">
@@ -47,9 +47,6 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
-
-            <!-- Hidden relationships field -->
-            <input type="textarea" id="id_relationships" name="relationships" value="{{ form.relationships.value|default:'[]' }}">
 
             <div id="relationships-container">
                 <div id="relationships-container">
@@ -221,19 +218,6 @@
 
     function removeRelationship(button) {
         button.closest(".relationship-row").remove();
-    }
-
-    function updateRelationshipsField() {
-        const relationships = [];
-        relationshipsContainer.querySelectorAll(".row").forEach(row => {
-            const relationship_type = row.querySelector("select[name='relationship_type']").value;
-            const allowedTypes = Array.from(row.querySelector("select[name='allowed_types']").selectedOptions)
-                .map(option => option.value);
-            if (relationship_type) {
-                relationships.push({ relationship_type: relationship_type, allowed_types: allowedTypes });
-            }
-        });
-        relationshipsField.value = JSON.stringify(relationships);
     }
 
 </script>
