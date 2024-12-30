@@ -206,7 +206,7 @@
         });
         relationshipsField.value = JSON.stringify(relationships);
     }
-    const initialRelationships= JSON.parse(initialRelationships || "[]");
+    const initialRelationships= JSON.parse("{{form.initialRelationships}}" || "[]");
     initialRelationships.forEach(attr => addRelationship(attr.relationship_type, attr.allowed_types));
 
 </script>
