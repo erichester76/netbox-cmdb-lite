@@ -65,7 +65,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         super().__init__(*args, **kwargs)
 
         # Prepare RelationshipType choices
-        relationship_type_choices = [(rel.pk, rel.name) for rel in models.RelationshipType.objects.all()]
+        relationship_type_choices = [(str(rel.pk), str(rel.name)) for rel in models.RelationshipType.objects.all()]
 
         # Prepare Allowed Object Type choices
         allowed_type_choices = []
@@ -84,8 +84,8 @@ class GenericObjectTypeForm(NetBoxModelForm):
         if instance and instance.relationships:
             for relationship in instance.relationships:
                 self.initial_relationships.append({
-                    "relationship_type": relationship.get("relationship_type"),
-                    "allowed_types": relationship.get("allowed_types", [])
+                    "relationship_type": str(relationship.get("relationship_type", "")),  
+                    "allowed_types": [str(at) for at in relationship.get("allowed_types", [])] 
                 })
 
                 
