@@ -32,7 +32,7 @@
                         {% for relationship in relationships %}
                             <tr>
                                 <th scope="row" class="text-muted">{{ relationship.relationship_type }}</th>
-                                <td> {{ relationship.allowed_types|join:", " }}</td>
+                                <td> {{ relationship.allowed_types|join:", "|title }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
