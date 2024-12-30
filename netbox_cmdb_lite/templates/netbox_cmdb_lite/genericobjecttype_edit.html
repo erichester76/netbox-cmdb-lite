@@ -51,40 +51,37 @@
             <div id="relationships-container">
                 <div id="relationships-container">
                     {% for relationship in form.initial_relationships %}
-                        <div class="row mb-3 relationship-row">
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
-                                    <select name="relationship_type_{{ forloop.counter }}" class="form-control">
-                                        {% for value, label in form.relationship_type_choices %}
-                                            <option value="{{ value }}" {% if value in relationship.relationship_type %}selected{% endif %}>
-                                                {{ label }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="allowed_types_{{ forloop.counter }}">Allowed Object Types</label>
-                                    <select name="allowed_types_{{ forloop.counter }}" class="form-control" multiple>
-                                        {% for value, label in form.allowed_type_choices %}
-                                            <option value="{{ value }}" {% if value in relationship.allowed_types %}selected{% endif %}>
-                                                {{ label }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-center">
-                                <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationship(this)">Remove</button>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>            </div>
-            
-            <button type="button" class="btn btn-secondary btn-sm" onclick="addRelationship()">Add Relationship</button>
 
+                    <div class="col-md-1"></div>
+                    <div class="col-md-2">
+                      <div class="form-group">
+                        <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
+                        <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
+                        <select name="relationship_type_{{ forloop.counter }}" class="form-control">
+                            {% for value, label in form.relationship_type_choices %}
+                                <option value="{{ value }}" {% if value in relationship.relationship_type %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="allowed_types_{{ forloop.counter }}">Allowed Object Types</label>
+                        <select name="allowed_types_{{ forloop.counter }}" class="form-control" multiple>
+                            {% for value, label in form.allowed_type_choices %}
+                                <option value="{{ value }}" {% if value in relationship.allowed_types %}selected{% endif %}>
+                                    {{ label }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </div>
+                    <div class="col-md-1">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationshop(this)">Remove</button>
+                    </div>
+                    <div class="col-md-1"></div>
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
