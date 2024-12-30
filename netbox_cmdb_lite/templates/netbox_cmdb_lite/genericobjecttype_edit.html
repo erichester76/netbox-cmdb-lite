@@ -26,7 +26,7 @@
             </div>
 
             <!-- Hidden attributes field -->
-            <input type ="textarea" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
+            <input type ="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
 
             <!-- Attributes Section -->
             <div class="row">
@@ -56,9 +56,9 @@
                                 <div class="form-group">
                                     <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
                                     <select name="relationship_type_{{ forloop.counter }}" class="form-control">
-                                        {% for pk, name in form.relationship_type_choices %}
-                                            <option value="{{ pk }}" {% if pk == relationship.relationship_type %}selected{% endif %}>
-                                                {{ name }}
+                                        {% for value, label in form.relationship_type_choices %}
+                                            <option value="{{ value }}" {% if value in relationship.relationship_type %}selected{% endif %}>
+                                                {{ label }}
                                             </option>
                                         {% endfor %}
                                     </select>
@@ -192,8 +192,8 @@
               <div class="form-group">
                 <label for="relationship_type_${count}">Relationship Type</label>
                 <select name="relationship_type_${count}" class="form-control">
-                    {% for pk, name in form.relationship_type_choices %}
-                        <option value="{{ pk }}">{{ name }}</option>
+                    {% for value, label in form.relationship_type_choices %}
+                        <option value="{{ value }}">{{ label }}</option>
                     {% endfor %}
                 </select>
               </div>

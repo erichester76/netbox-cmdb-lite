@@ -61,6 +61,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         return relationships
 
     def __init__(self, *args, **kwargs):
+        instance = kwargs.get("instance", None)
         super().__init__(*args, **kwargs)
 
         # Prepare RelationshipType choices
@@ -68,31 +69,25 @@ class GenericObjectTypeForm(NetBoxModelForm):
 
         # Prepare Allowed Object Type choices
         allowed_type_choices = []
-        for obj in models.GenericObjectType.objects.all(): allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
+        for obj in models.GenericObjectType.objects.all():
+            allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
         netbox_cts = ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
-        for ct in netbox_cts: allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
+        for ct in netbox_cts:
+            allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
-        # Dynamically populate choices for the frontend
-        self.fields["allowed_types"] = forms.MultipleChoiceField(
-            choices=allowed_type_choices,
-            label="Allowed Object Types",
-            required=False,
-            help_text="Select allowed object types for this relationship."
-        )
-        self.fields["relationship_type"] = forms.ChoiceField(
-            choices=relationship_type_choices,
-            label="Relationship",
-            required=False,
-            help_text="Select a type for this relationship."
-        )
+        # Dynamically populate field choices
+        self.relationship_type_choices = relationship_type_choices
+        self.allowed_type_choices = allowed_type_choices
+
         # Set initial data for relationships when editing an instance
         self.initial_relationships = []
-        if self.instance and self.instance.relationships:
-            for relationship in self.instance.relationships:
+        if instance and instance.relationships:
+            for relationship in instance.relationships:
                 self.initial_relationships.append({
                     "relationship_type": relationship.get("relationship_type"),
                     "allowed_types": relationship.get("allowed_types", [])
                 })
+
                 
     def save(self, commit=True):
         instance = super().save(commit=False)
