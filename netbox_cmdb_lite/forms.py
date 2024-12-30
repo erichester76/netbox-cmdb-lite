@@ -85,7 +85,38 @@ class GenericObjectTypeForm(NetBoxModelForm):
             required=False,
             help_text="Select a type for this relationship."
         )
-            
+        # Set initial data for relationships when editing an instance
+        self.initial_relationships = []
+        if self.instance and self.instance.relationships:
+            for relationship in self.instance.relationships:
+                self.initial_relationships.append({
+                    "relationship_type": relationship.get("relationship_type"),
+                    "allowed_types": relationship.get("allowed_types", [])
+                })
+                
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+
+        # Collect all relationships
+        relationships = []
+        for i in range(len(self.initial_relationships) + 1):  # Adjust range for dynamically added rows
+            relationship_type = self.data.get(f"relationship_type_{i}")
+            allowed_types = self.data.getlist(f"allowed_types_{i}")
+            if relationship_type:  # Only add if relationship_type exists
+                relationships.append({
+                    "relationship_type": relationship_type,
+                    "allowed_types": allowed_types,
+                })
+
+        # Save relationships JSON
+        instance.relationships = relationships
+
+        if commit:
+            instance.save()
+
+        return instance
+                    
+                
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
         queryset=models.GenericObjectType.objects.all(),
