@@ -12,6 +12,9 @@ class Category(NetBoxModel):
     def __str__(self):
         return self.name
     
+    def get_absolute_url(self):
+        return reverse("plugins:netbox_cmdb_lite:category", kwargs={'pk': self.pk})
+    
 class GenericObjectType(NetBoxModel):
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
