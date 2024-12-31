@@ -1,242 +1,82 @@
 {% extends "generic/object_edit.html" %}
-{% block title %}Add/Edit Generic Object Type{% endblock %}
+
 {% block content %}
-<div class="panel panel-default">
-    <div class="panel-heading">
-    </div>
-    <div class="panel-body">
-        <form method="post" onsubmit="updateAttributesField();">
-            {% csrf_token %}
-            <!-- Name and Category on the same row -->
-            <div class="row mb-3">
-                <div class="col-md-1"></div>
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label for="id_name">Name</label>
-                        {{ form.name }}
-                    </div>
-                </div>
-                <div class="col-md-5">
-                    <div class="form-group">
-                        <label for="id_category">Object Category</label>
-                        {{ form.category }}
-                    </div>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-
-            <!-- Hidden attributes field -->
-            <input type ="hidden" id="id_attributes" name="attributes" value="{{ form.attributes.value|default:'[]' }}">
-
-            <!-- Attributes Section -->
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <label>Object Fields</label>
-                    <p class="form-text text-muted">Add one or more fields, including their type and optional settings.</p>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-
-            <div id="attributes-container">
-                <!-- Dynamic attributes will be injected here -->
-            </div>
-
-            <div class="row mb-3">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
-                </div>
-            </div>
-
-            <!-- Relationships Section -->
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <label>Default Relationships</label>
-                    <p class="form-text text-muted">Add one or more relationships, including their allowed object types.</p>
-                </div>
-                <div class="col-md-1"></div>
-            </div>
-
-            <div id="relationships-container">
-                {% for relationship in form.initial_relationships %}
-                <div class="row mb-3 align-items-center">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-2">
-                      <div class="form-group">
-                        <label for="relationship_type_{{ forloop.counter }}">Relationship Type</label>
-                        <select name="relationship_type_{{ forloop.counter }}" class="form-control">
-                            {% for value, label in form.relationship_type_choices %}
-                                <option value="{{ value }}"{% if value == relationship.relationship_type %}selected="selected"{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                      </div>
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">{{ form.instance.name|default:"Add/Edit Generic Object Type" }}</h5>
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="id_name">Name</label>
+                            {{ form.name }}
+                        </div>
                     </div>
                     <div class="col-md-6">
-                      <div class="form-group">
-                        <label for="allowed_types_{{ forloop.counter }}">Allowed Object Types</label>
-                        <select name="allowed_types_{{ forloop.counter }}" class="form-control" multiple>
-                            {% for value, label in form.allowed_type_choices %}
-                                <option value="{{ value }}" {% if value in relationship.allowed_types %}selected{% endif %}>
-                                    {{ label }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                      </div>
-                    </div>
-                    <div class="col-md-1">
-                        <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationship(this)">Remove</button>
+                        <div class="form-group">
+                            <label for="id_category">Category</label>
+                            {{ form.category }}
+                        </div>
                     </div>
                 </div>
-                {% endfor %}
-            </div>
 
-            <div class="row mb-3">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <button type="button" class="btn btn-secondary btn-block" onclick="addRelationship()">Add Relationship</button>
+                <h5>Attributes</h5>
+                <div id="attributes-container" class="card mb-3">
+                    <div class="card-body">
+                        {{ attribute_formset.management_form }}
+                        {% for form in attribute_formset %}
+                            <div class="form-row">
+                                {{ form.as_p }}
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('attributes-container')">Add Attribute</button>
+                    </div>
                 </div>
-            </div>
 
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <button type="submit" class="btn btn-primary btn-block mt-3">Save</button>
+                <h5>Relationships</h5>
+                <div id="relationships-container" class="card mb-3">
+                    <div class="card-body">
+                        {{ relationship_formset.management_form }}
+                        {% for form in relationship_formset %}
+                            <div class="form-row">
+                                {{ form.as_p }}
+                                <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('relationships-container')">Add Relationship</button>
+                    </div>
                 </div>
-                <div class="col-md-1"></div>
-            </div>
 
-        </form>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'genericobjecttype_list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
 <script>
-    const attributesContainer = document.getElementById("attributes-container");
-    const attributesField = document.getElementById("id_attributes");
-
-    function addAttribute(name = "", type = "string", options = "", reference = "") {
-        const div = document.createElement("div");
-        div.className = "row mb-3 align-items-center";
-        div.innerHTML = `
-            <div class="col-md-1"></div>
-            <div class="col-md-2">
-                <input type="text" class="form-control" placeholder="Field Name" value="${name}" oninput="updateAttributesField()" />
-            </div>
-            <div class="col-md-2">
-                <select class="form-control" onchange="toggleFieldOptions(this, '${options}', '${reference}'); updateAttributesField();">
-                    <option value="string" ${type === "string" ? "selected" : ""}>String</option>
-                    <option value="integer" ${type === "integer" ? "selected" : ""}>Integer</option>
-                    <option value="boolean" ${type === "boolean" ? "selected" : ""}>Boolean</option>
-                    <option value="multi-choice" ${type === "multi-choice" ? "selected" : ""}>Multi-Choice</option>
-                </select>
-            </div>
-            <div class="col-md-4">
-                <input type="text" class="form-control type-options" placeholder="Options (comma-separated)" value="${options}" ${type === "multi-choice" ? "" : "style='display: none;'"}
-                oninput="updateAttributesField()" />
-                <input type="text" class="form-control type-reference mt-2" placeholder="Reference Model" value="${reference}" ${type === "foreign-key" ? "" : "style='display: none;'"}
-                oninput="updateAttributesField()" />
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeAttribute(this)">Remove</button>
-            </div>
-            <div class="col-md-1"></div>
-        `;
-        attributesContainer.appendChild(div);
-        updateAttributesField();
-    }
-
-    function removeAttribute(button) {
-    const row = button.closest(".row.mb-3.align-items-center");
-    if (row) {
-        row.remove();
-        updateAttributesField(); 
-    }
+function addRow(containerId) {
+    const container = document.getElementById(containerId);
+    const totalForms = container.querySelector('input[name$="-TOTAL_FORMS"]');
+    const formIdx = totalForms.value;
+    const emptyForm = container.querySelector('.empty-form').outerHTML.replace(/__prefix__/g, formIdx);
+    container.insertAdjacentHTML('beforeend', emptyForm);
+    totalForms.value = parseInt(formIdx) + 1;
 }
 
-    function updateAttributesField() {
-        const attributes = [];
-        attributesContainer.querySelectorAll(".row.mb-3.align-items-center").forEach(row => {
-            const name = row.querySelector("input[type='text']").value.trim();
-            const type = row.querySelector("select").value;
-            const optionsInput = row.querySelector(".type-options");
-            const options = optionsInput && optionsInput.style.display !== "none" ? optionsInput.value.split(",").map(opt => opt.trim()).filter(opt => opt) : [];
-            const referenceInput = row.querySelector(".type-reference");
-            const reference = referenceInput && referenceInput.style.display !== "none" ? referenceInput.value.trim() : "";
-
-            if (name) {
-                const attribute = { name, type };
-                if (type === "multi-choice") attribute.options = options;
-                attributes.push(attribute);
-            }
-        });
-
-        attributesField.value = JSON.stringify(attributes); // Save to hidden input field
-    }
-
-    function toggleFieldOptions(select, options, reference) {
-        const row = select.closest(".row");
-        const optionsInput = row.querySelector(".type-options");
-        const referenceInput = row.querySelector(".type-reference");
-
-        if (select.value === "multi-choice") {
-            optionsInput.style.display = "block";
-            optionsInput.value = options;
-            referenceInput.style.display = "none";
-            referenceInput.value = "";
-        } else {
-            optionsInput.style.display = "none";
-            optionsInput.value = "";
-            referenceInput.style.display = "none";
-            referenceInput.value = "";
-        }
-    }
-
-    const initialAttributes = JSON.parse(attributesField.value || "[]");
-    initialAttributes.forEach(attr => addAttribute(attr.name, attr.type, attr.options || "", attr.reference || ""));
-
-    const relationshipsContainer = document.getElementById("relationships-container");
-
-    function addRelationship(type = "", allowedTypes = []) {
-        const count = relationshipsContainer.children.length + 1;
-
-        const div = document.createElement("div");
-        div.className = "row mb-3 align-items-center";
-        div.innerHTML = `
-            <div class="col-md-1"></div>
-            <div class="col-md-2">
-              <div class="form-group">
-                <label for="relationship_type_${count}">Relationship Type</label>
-                <select name="relationship_type_${count}" class="form-control">
-                    {% for value, label in form.relationship_type_choices %}
-                        <option value="{{ value }}">{{ label }}</option>
-                    {% endfor %}
-                </select>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="allowed_types_${count}">Allowed Object Types</label>
-                <select name="allowed_types_${count}" class="form-control" multiple>
-                    {% for value, label in form.allowed_type_choices %}
-                        <option value="{{ value }}">{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            </div>
-            <div class="col-md-1">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationship(this)">Remove</button>
-            </div>
-            <div class="col-md-1"></div>
-        `;
-        relationshipsContainer.appendChild(div);
-    }
-
-    function removeRelationship(button) {
-        button.closest(".row").remove();
-    }
-
+function removeRow(button) {
+    button.closest('.form-row').remove();
+}
 </script>
 {% endblock %}

@@ -2,7 +2,6 @@ from netbox.views import generic
 from . import models
 from . import tables
 from . import forms
-from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
 import json
 
@@ -29,12 +28,60 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
-    template_name = "netbox_cmdb_lite/genericobjecttype_edit.html"
-    
-    def form_valid(self, form):
-        instance = form.save(commit=False)
-        instance.save()
-        return super().form_valid(form)
+    template_name = "generic/object_edit.html"
+
+    def get_extra_context(self, request, instance):
+        # Initialize formsets for attributes and relationships
+        attribute_formset = forms.ObjectTypeAttributeFormSet(
+            data=request.POST if request.method == "POST" else None,
+            prefix="attributes",
+            initial=instance.attributes if instance else [],
+        )
+        relationship_formset = forms.ObjectTypeRelationshipFormSet(
+            data=request.POST if request.method == "POST" else None,
+            prefix="relationships",
+            initial=instance.relationships if instance else [],
+        )
+
+        return {
+            "attribute_formset": attribute_formset,
+            "relationship_formset": relationship_formset,
+        }
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests for saving attributes and relationships."""
+        instance = self.get_object()
+        form = self.get_form()
+
+        # Initialize formsets
+        attribute_formset = forms.ObjectTypeAttributeFormSet(request.POST, prefix="attributes")
+        relationship_formset = forms.ObjectTypeRelationshipFormSet(request.POST, prefix="relationships")
+
+        if form.is_valid() and attribute_formset.is_valid() and relationship_formset.is_valid():
+            instance = form.save(commit=False)
+
+            # Save attributes
+            attributes = [
+                attr.cleaned_data for attr in attribute_formset if not attr.cleaned_data.get("DELETE", False)
+            ]
+            instance.attributes = attributes
+
+            # Save relationships
+            relationships = [
+                {
+                    "relationship_type": str(rel.cleaned_data["relationship_type"].pk),
+                    "allowed_types": [str(ct.pk) for ct in rel.cleaned_data["allowed_types"]],
+                }
+                for rel in relationship_formset if not rel.cleaned_data.get("DELETE", False)
+            ]
+            instance.relationships = relationships
+
+            # Save the instance
+            instance.save()
+            return self.form_valid(form)
+
+        return self.form_invalid(form)
+
 
 class GenericObjectTypeDetailView(generic.ObjectView):
     queryset = models.GenericObjectType.objects.all()

@@ -36,7 +36,7 @@ class GenericObjectType(NetBoxModel):
         default=list, 
         blank=True, 
         null=True,
-        help_text="Define the fields and their types for this object type."
+        help_text="Define the relationships and their types for this object type."
     )
 
     def __str__(self):
