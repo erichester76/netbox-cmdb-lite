@@ -1,67 +1,105 @@
 {% extends "generic/object_edit.html" %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="card">
-        <div class="card-header">
-            <h5 class="card-title">{{ form.instance.name|default:"Add/Edit Generic Object Type" }}</h5>
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_name">Name</label>
-                            {{ form.name }}
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="id_category">Category</label>
-                            {{ form.category }}
-                        </div>
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title">
+            {{ form.instance.name|default:"Add/Edit Generic Object Type" }}
+        </h5>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            
+            <!-- Name and Category -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_name">Name</label>
+                        {{ form.name }}
                     </div>
                 </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="id_category">Category</label>
+                        {{ form.category }}
+                    </div>
+                </div>
+            </div>
 
-                <h5>Attributes</h5>
-                <div id="attributes-container" class="card mb-3">
-                    <div class="card-body">
-                        {{ attribute_formset.management_form }}
-                        {% for form in attribute_formset %}
-                            <div class="form-row">
-                                {{ form.as_p }}
+            <!-- Allowed Object Types -->
+            <div class="form-group">
+                <label for="id_allowed_types">Allowed Object Types</label>
+                {{ form.allowed_types }}
+                <p class="text-muted">Select allowed object types for this Generic Object Type, including NetBox models and GenericObjectTypes.</p>
+            </div>
+
+            <!-- Attributes Section -->
+            <h5>Attributes</h5>
+            <div id="attributes-container" class="card mb-3">
+                <div class="card-body">
+                    {{ attribute_formset.management_form }}
+                    {% for form in attribute_formset %}
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <label for="{{ form.name.id_for_label }}">Field Name</label>
+                                {{ form.name }}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.type.id_for_label }}">Field Type</label>
+                                {{ form.type }}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.options.id_for_label }}">Options</label>
+                                {{ form.options }}
+                            </div>
+                            <div class="col-md-3">
+                                <label for="{{ form.reference.id_for_label }}">Reference</label>
+                                {{ form.reference }}
+                            </div>
+                            <div class="col-md-1">
                                 <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('attributes-container')">Add Attribute</button>
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('attributes-container')">Add Attribute</button>
+                </div>
+            </div>
 
-                <h5>Relationships</h5>
-                <div id="relationships-container" class="card mb-3">
-                    <div class="card-body">
-                        {{ relationship_formset.management_form }}
-                        {% for form in relationship_formset %}
-                            <div class="form-row">
-                                {{ form.as_p }}
+            <!-- Relationships Section -->
+            <h5>Relationships</h5>
+            <div id="relationships-container" class="card mb-3">
+                <div class="card-body">
+                    {{ relationship_formset.management_form }}
+                    {% for form in relationship_formset %}
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <label for="{{ form.relationship_type.id_for_label }}">Relationship Type</label>
+                                {{ form.relationship_type }}
+                            </div>
+                            <div class="col-md-5">
+                                <label for="{{ form.allowed_types.id_for_label }}">Allowed Object Types</label>
+                                {{ form.allowed_types }}
+                            </div>
+                            <div class="col-md-1">
                                 <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
                             </div>
-                        {% endfor %}
-                    </div>
-                    <div class="card-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('relationships-container')">Add Relationship</button>
-                    </div>
+                        </div>
+                    {% endfor %}
                 </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('relationships-container')">Add Relationship</button>
+                </div>
+            </div>
 
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{% url 'genericobjecttype_list' %}" class="btn btn-secondary">Cancel</a>
-                </div>
-            </form>
-        </div>
+            <!-- Save and Cancel Buttons -->
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'genericobjecttype_list' %}" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
 </div>
 
@@ -76,7 +114,10 @@ function addRow(containerId) {
 }
 
 function removeRow(button) {
-    button.closest('.form-row').remove();
+    const row = button.closest('.form-row');
+    if (row) {
+        row.remove();
+    }
 }
 </script>
 {% endblock %}
