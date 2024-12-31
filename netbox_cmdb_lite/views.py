@@ -14,9 +14,6 @@ class CategoryEditView(generic.ObjectEditView):
     queryset = models.Category.objects.all()
     model_form = forms.CategoryForm
 
-class CategoryDetailView(generic.ObjectDeleteView):
-    queryset = models.Category.objects.all()
-
 class CategoryDeleteView(generic.ObjectDeleteView):
     queryset = models.Category.objects.all()
 
