@@ -37,14 +37,26 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
+
             <div id="attributes-container">
                 <!-- Dynamic attributes will be injected here -->
             </div>
+
             <div class="row mb-3">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
                     <button type="button" class="btn btn-secondary btn-block" onclick="addAttribute()">Add Field</button>
                 </div>
+            </div>
+
+            <!-- Relationships Section -->
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <label>Default Relationships</label>
+                    <p class="form-text text-muted">Add one or more relationships, including their allowed object types.</p>
+                </div>
+                <div class="col-md-1"></div>
             </div>
 
             <div id="relationships-container">
@@ -75,20 +87,20 @@
                         </select>
                       </div>
                     </div>
-
-
                     <div class="col-md-1">
                         <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationship(this)">Remove</button>
                     </div>
                 </div>
                 {% endfor %}
             </div>
+
             <div class="row mb-3">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
                     <button type="button" class="btn btn-secondary btn-block" onclick="addRelationship()">Add Relationship</button>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -96,12 +108,13 @@
                 </div>
                 <div class="col-md-1"></div>
             </div>
+
         </form>
     </div>
 </div>
 
 <script>
-    const container = document.getElementById("attributes-container");
+    const attrributesContainer = document.getElementById("attributes-container");
     const attributesField = document.getElementById("id_attributes");
 
     function addAttribute(name = "", type = "string", options = "", reference = "") {
@@ -131,7 +144,7 @@
             </div>
             <div class="col-md-1"></div>
         `;
-        container.appendChild(div);
+        attributesContainer.appendChild(div);
         updateAttributesField();
     }
 
@@ -142,7 +155,7 @@
 
     function updateAttributesField() {
         const attributes = [];
-        container.querySelectorAll(".row").forEach(row => {
+        attributesContainer.querySelectorAll(".row").forEach(row => {
             const name = row.querySelector("input[type='text']").value.trim();
             const type = row.querySelector("select").value;
             const optionsInput = row.querySelector(".type-options");
@@ -213,7 +226,7 @@
             </div>
             </div>
             <div class="col-md-1">
-                <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationshop(this)">Remove</button>
+                <button type="button" class="btn btn-danger btn-sm" onclick="removeRelationship(this)">Remove</button>
             </div>
             <div class="col-md-1"></div>
         `;
