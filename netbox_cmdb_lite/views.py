@@ -28,6 +28,7 @@ class GenericObjectTypeListView(generic.ObjectListView):
 class GenericObjectTypeEditView(generic.ObjectEditView):
     queryset = models.GenericObjectType.objects.all()
     form = forms.GenericObjectTypeForm
+    template_name = "netbox_cmdb_lite/genericobjecttype_edit.html"
 
     def get_extra_context(self, request, instance):
         # Initialize formsets for attributes and relationships
