@@ -40,9 +40,6 @@ class GenericObjectTypeForm(NetBoxModelForm):
             if attr["type"] == "multi-choice" and "options" in attr:
                 if not isinstance(attr["options"], list):
                     raise forms.ValidationError(f"Options for '{attr['name']}' must be a list.")
-            if attr["type"] == "foreign-key" and "reference" in attr:
-                if not isinstance(attr["reference"], str):
-                    raise forms.ValidationError(f"Reference for '{attr['name']}' must be a string.")
         return attributes
 
     def clean_relationships(self):
@@ -64,10 +61,8 @@ class GenericObjectTypeForm(NetBoxModelForm):
         instance = kwargs.get("instance", None)
         super().__init__(*args, **kwargs)
 
-        # Prepare RelationshipType choices
         relationship_type_choices = [(str(rel.pk), str(rel.name)) for rel in models.RelationshipType.objects.all()]
 
-        # Prepare Allowed Object Type choices
         allowed_type_choices = []
         for obj in models.GenericObjectType.objects.all():
             allowed_type_choices.append((f"cmdb:{obj.pk}", f"CMDB: {obj.name}"))
@@ -75,11 +70,9 @@ class GenericObjectTypeForm(NetBoxModelForm):
         for ct in netbox_cts:
             allowed_type_choices.append((f"netbox:{ct.pk}", f"NetBox: {ct.app_label}.{ct.model}"))
 
-        # Dynamically populate field choices
         self.relationship_type_choices = relationship_type_choices
         self.allowed_type_choices = allowed_type_choices
 
-        # Set initial data for relationships when editing an instance
         self.initial_relationships = []
         if instance and instance.relationships:
             for relationship in instance.relationships:
@@ -92,36 +85,37 @@ class GenericObjectTypeForm(NetBoxModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # Collect all relationships dynamically from form data
+        # Parse and assign attributes
+        attributes = self.cleaned_data.get("attributes", "[]")
+        try:
+            attributes = json.loads(attributes) if isinstance(attributes, str) else attributes
+        except json.JSONDecodeError:
+            attributes = []
+
+        instance.attributes = attributes
+
+        # Parse and assign relationships
         relationships = []
         relationship_prefix = "relationship_type_"
         allowed_prefix = "allowed_types_"
         for key in self.data:
             if key.startswith(relationship_prefix):
-                index = key[len(relationship_prefix):]  # Extract index
+                index = key[len(relationship_prefix):]
                 relationship_type = self.data.get(f"{relationship_prefix}{index}")
                 allowed_types = self.data.getlist(f"{allowed_prefix}{index}")
-                if relationship_type:  # Only add valid relationships
+                if relationship_type:
                     relationships.append({
                         "relationship_type": relationship_type,
                         "allowed_types": allowed_types,
                     })
 
-        attributes = self.data.get("attributes")
-        if attributes:
-            try:
-                attributes = json.loads(attributes)
-            except json.JSONDecodeError as e:
-                raise forms.ValidationError(f"Invalid attributes JSON: {e}")
-        
-        instance.relationships = relationships or []       
-        instance.attributes = attributes or []
-        
+        instance.relationships = relationships
+
         if commit:
             instance.save()
 
         return instance
-                    
+                        
                 
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(

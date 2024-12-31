@@ -149,13 +149,16 @@
     }
 
     function removeAttribute(button) {
-        button.closest(".row").remove();
-        updateAttributesField();
+    const row = button.closest(".row.mb-3.align-items-center");
+    if (row) {
+        row.remove();
+        updateAttributesField(); 
     }
+}
 
     function updateAttributesField() {
         const attributes = [];
-        attributesContainer.querySelectorAll(".row").forEach(row => {
+        attributesContainer.querySelectorAll(".row.mb-3.align-items-center").forEach(row => {
             const name = row.querySelector("input[type='text']").value.trim();
             const type = row.querySelector("select").value;
             const optionsInput = row.querySelector(".type-options");
