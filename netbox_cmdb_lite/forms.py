@@ -19,16 +19,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Select a category for this object type",
     )
-    relationship_type = DynamicModelChoiceField(
-        queryset=models.RelationshipType.objects.all(),
-        label="Relationship Type",
-        required=False,
-    )
-    allowed_types = DynamicModelMultipleChoiceField(
-        queryset=None,
-        label="Allowed Object Types",
-        required=False,
-    )
+
 
     class Meta:
         model = models.GenericObjectType
