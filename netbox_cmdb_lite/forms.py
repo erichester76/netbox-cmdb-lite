@@ -2,7 +2,7 @@ from django.contrib.contenttypes.models import ContentType
 from django import forms
 from django.forms import formset_factory
 from netbox.forms import NetBoxModelForm
-from utilities.forms.fields import DynamicModelChoiceField, JSONField
+from utilities.forms.fields import DynamicModelChoiceField, DynamicModelMultipleChoiceField, JSONField
 from . import models
 import json
 
@@ -14,13 +14,13 @@ class CategoryForm(NetBoxModelForm):
 
 class GenericObjectTypeForm(NetBoxModelForm):
     category = DynamicModelChoiceField(
-        queryset=Category.objects.all(),
+        queryset=models.Category.objects.all(),
         label="Category",
         required=False,
         help_text="Select a category for this object type",
     )
     relationship_type = DynamicModelChoiceField(
-        queryset=RelationshipType.objects.all(),
+        queryset=models.RelationshipType.objects.all(),
         label="Relationship Type",
         required=False,
     )
@@ -31,7 +31,7 @@ class GenericObjectTypeForm(NetBoxModelForm):
     )
 
     class Meta:
-        model = GenericObjectType
+        model = models.GenericObjectType
         fields = ['name', 'category']
                         
 class ObjectTypeAttributeForm(forms.Form):
@@ -61,7 +61,6 @@ class ObjectTypeRelationshipForm(forms.Form):
         label="Allowed Object Types",
         required=True,
     )
-
 
 ObjectTypeAttributeFormSet = formset_factory(ObjectTypeAttributeForm, extra=1, can_delete=True)
 ObjectTypeRelationshipFormSet = formset_factory(ObjectTypeRelationshipForm, extra=1, can_delete=True)
