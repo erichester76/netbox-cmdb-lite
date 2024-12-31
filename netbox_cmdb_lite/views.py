@@ -4,7 +4,7 @@ from . import tables
 from . import forms
 from django.http import JsonResponse
 from django.contrib.contenttypes.models import ContentType
-
+import json
 
 class CategoryListView(generic.ObjectListView):
     queryset = models.Category.objects.all()
@@ -81,7 +81,6 @@ class RelationshipTypeEditView(generic.ObjectEditView):
 
         # Ensure `attributes` is saved as JSON (not stringified JSON)
         if isinstance(instance.attributes, str):
-            import json
             instance.attributes = json.loads(instance.attributes)
 
         instance.save()
@@ -93,15 +92,6 @@ class RelationshipTypeDetailView(generic.ObjectView):
 class RelationshipTypeDeleteView(generic.ObjectDeleteView):
     queryset = models.RelationshipType.objects.all()
 
-# ObjectType Attributes API
-def get_object_type_attributes(request, pk):
-    try:
-        object_type = models.GenericObjectType.objects.get(pk=pk)
-        return JsonResponse({"attributes": object_type.attributes}, safe=False)
-    except models.GenericObjectType.DoesNotExist:
-        return JsonResponse({"error": "Object type not found"}, status=404)
-
-# GenericObject Views
 class GenericObjectListView(generic.ObjectListView):
     queryset = models.GenericObject.objects.all()
     table = tables.GenericObjectTable

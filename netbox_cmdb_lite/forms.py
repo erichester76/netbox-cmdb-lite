@@ -3,7 +3,7 @@ from django import forms
 from netbox.forms import NetBoxModelForm
 from utilities.forms.fields import DynamicModelChoiceField, JSONField
 from . import models
-
+import json
 
 
 class CategoryForm(NetBoxModelForm):
@@ -92,20 +92,31 @@ class GenericObjectTypeForm(NetBoxModelForm):
     def save(self, commit=True):
         instance = super().save(commit=False)
 
-        # Collect all relationships
+        # Collect all relationships dynamically from form data
         relationships = []
-        for i in range(len(self.initial_relationships) + 1):  # Adjust range for dynamically added rows
-            relationship_type = self.data.get(f"relationship_type_{i}")
-            allowed_types = self.data.getlist(f"allowed_types_{i}")
-            if relationship_type:  # Only add if relationship_type exists
-                relationships.append({
-                    "relationship_type": relationship_type,
-                    "allowed_types": allowed_types,
-                })
+        relationship_prefix = "relationship_type_"
+        allowed_prefix = "allowed_types_"
+        for key in self.data:
+            if key.startswith(relationship_prefix):
+                index = key[len(relationship_prefix):]  # Extract index
+                relationship_type = self.data.get(f"{relationship_prefix}{index}")
+                allowed_types = self.data.getlist(f"{allowed_prefix}{index}")
+                if relationship_type:  # Only add valid relationships
+                    relationships.append({
+                        "relationship_type": relationship_type,
+                        "allowed_types": allowed_types,
+                    })
 
-        # Save relationships JSON
-        instance.relationships = relationships
-
+        attributes = self.data.get("attributes")
+        if attributes:
+            try:
+                attributes = json.loads(attributes)
+            except json.JSONDecodeError as e:
+                raise forms.ValidationError(f"Invalid attributes JSON: {e}")
+        
+        instance.relationships = relationships or []       
+        instance.attributes = attributes or []
+        
         if commit:
             instance.save()
 
