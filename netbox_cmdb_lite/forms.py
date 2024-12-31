@@ -101,13 +101,10 @@ class GenericObjectTypeForm(NetBoxModelForm):
         for key in self.data:
             if key.startswith(relationship_prefix):
                 index = key[len(relationship_prefix):]
-                relationship_type = self.data.get(f"{relationship_prefix}{index}")
-                allowed_types = self.data.getlist(f"{allowed_prefix}{index}")
-                if relationship_type:
-                    relationships.append({
-                        "relationship_type": relationship_type,
-                        "allowed_types": allowed_types,
-                    })
+                relationships.append({
+                    "relationship_type": self.data.get(f"{relationship_prefix}{index}"),
+                    "allowed_types": self.data.getlist(f"{allowed_prefix}{index}")
+                })
 
         instance.relationships = relationships
 
