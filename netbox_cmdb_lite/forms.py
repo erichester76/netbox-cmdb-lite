@@ -56,7 +56,7 @@ class ObjectTypeRelationshipForm(forms.Form):
         label="Relationship Type",
         required=True,
     )
-    allowed_types = models.DynamicModelMultipleChoiceField(
+    allowed_types = DynamicModelMultipleChoiceField(
         queryset=ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy']),
         label="Allowed Object Types",
         required=True,
