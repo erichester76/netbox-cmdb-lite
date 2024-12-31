@@ -19,16 +19,16 @@ class GenericObjectTypeForm(NetBoxModelForm):
         required=False,
         help_text="Select a category for this object type",
     )
-    relationship_type = DynamicModelChoiceField(
-        queryset=models.RelationshipType.objects.all(),
-        label="Relationship Type",
-        required=False,
-    )
-    allowed_types = DynamicModelMultipleChoiceField(
-        queryset=ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy']),
-        label="Allowed Object Types",
-        required=False,
-    )
+    # relationship_type = DynamicModelChoiceField(
+    #     queryset=models.RelationshipType.objects.all(),
+    #     label="Relationship Type",
+    #     required=False,
+    # )
+    # allowed_types = DynamicModelMultipleChoiceField(
+    #     queryset=ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy']),
+    #     label="Allowed Object Types",
+    #     required=False,
+    # )
 
     class Meta:
         model = models.GenericObjectType
@@ -56,10 +56,13 @@ class ObjectTypeRelationshipForm(forms.Form):
         label="Relationship Type",
         required=True,
     )
-    allowed_types = DynamicModelMultipleChoiceField(
-        queryset=ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy']),
+    allowed_types = forms.MultipleChoiceField(
+        choices=[
+            (f"{ct.pk}", f"{ct.app_label}.{ct.model}")
+            for ct in ContentType.objects.filter(app_label__in=['dcim', 'virtualization', 'ipam', 'tenancy'])
+        ],
         label="Allowed Object Types",
-        required=True,
+        required=False,
     )
 
 ObjectTypeAttributeFormSet = formset_factory(ObjectTypeAttributeForm, extra=1, can_delete=True)
