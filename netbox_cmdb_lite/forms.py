@@ -56,8 +56,8 @@ class ObjectTypeRelationshipForm(forms.Form):
         required=False,
     )
 
-ObjectTypeAttributeFormSet = formset_factory(ObjectTypeAttributeForm, extra=1, can_delete=True)
-ObjectTypeRelationshipFormSet = formset_factory(ObjectTypeRelationshipForm, extra=1, can_delete=True)
+ObjectTypeAttributeFormSet = formset_factory(ObjectTypeAttributeForm, extra=0, can_delete=True)
+ObjectTypeRelationshipFormSet = formset_factory(ObjectTypeRelationshipForm, extra=0, can_delete=True)
 
 class GenericObjectForm(forms.ModelForm):
     object_type = DynamicModelChoiceField(
