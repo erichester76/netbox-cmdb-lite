@@ -40,7 +40,7 @@
                 <div class="card-body">
                     {{ attribute_formset.management_form }}
                     {% for form in attribute_formset %}
-                        <div class="form-row align-items-center">
+                        <div class="row align-items-center mb-2">
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="{{ form.name.id_for_label }}">Field Name</label>
@@ -59,7 +59,7 @@
                                     {{ form.options }}
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-2">
                                 <div class="form-group">
                                     <label for="{{ form.reference.id_for_label }}">Reference</label>
                                     {{ form.reference }}
@@ -82,7 +82,7 @@
                 <div class="card-body">
                     {{ relationship_formset.management_form }}
                     {% for form in relationship_formset %}
-                        <div class="form-row align-items-center">
+                        <div class="row align-items-center mb-2">
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="{{ form.relationship_type.id_for_label }}">Relationship Type</label>
@@ -109,6 +109,7 @@
             <!-- Save and Cancel Buttons -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Save</button>
+                <a href="{% url 'genericobjecttype_list' %}" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
@@ -125,7 +126,7 @@ function addRow(containerId) {
 }
 
 function removeRow(button) {
-    const row = button.closest('.form-row');
+    const row = button.closest('.row');
     if (row) {
         row.remove();
     }
