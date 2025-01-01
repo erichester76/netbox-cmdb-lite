@@ -119,8 +119,12 @@ function addRow(containerId) {
     const container = document.getElementById(containerId);
     const totalForms = container.querySelector('input[name$="-TOTAL_FORMS"]');
     const formIdx = totalForms.value;
-    const emptyForm = container.querySelector('.empty-form').outerHTML.replace(/__prefix__/g, formIdx);
-    container.insertAdjacentHTML('beforeend', emptyForm);
+    const emptyForm = container.querySelector('.empty-form').innerHTML.replace(/__prefix__/g, formIdx);
+    const cardBody = container.querySelector('.card-body');
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = emptyForm.trim();
+    const newRow = tempDiv.firstChild;
+    cardBody.appendChild(newRow);
     totalForms.value = parseInt(formIdx) + 1;
 }
 
