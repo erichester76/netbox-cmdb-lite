@@ -88,6 +88,7 @@
                     </div>
                 </div>
             </div>
+
             <!-- Relationships Section -->
             <h5>Relationships</h5>
             <div id="relationships-container" class="card mb-3">
@@ -117,7 +118,23 @@
                     <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('relationships-container')">Add Relationship</button>
                 </div>
                 <div class="d-none empty-form">
-                    {{ relationship_formset.empty_form.as_p }}
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="{{ relationship.empty_form.relationship_type.id_for_label }}">Relationship Type</label>
+                                {{ relationship_formset.empty_form.relationship_type }}
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label for="{{ relationship_formset.empty_form.allowed_types.id_for_label }}">Allowed Object Types</label>
+                                {{ relationship_formset.empty_form.allowed_types }}
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
