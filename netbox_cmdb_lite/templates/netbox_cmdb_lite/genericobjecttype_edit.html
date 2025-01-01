@@ -52,12 +52,6 @@
                                     {{ form.options }}
                                 </div>
                             </div>
-                            <div class="col-md-2">
-                                <div class="form-group">
-                                    <label for="{{ form.reference.id_for_label }}">Reference</label>
-                                    {{ form.reference }}
-                                </div>
-                            </div>
                             <div class="col-md-1">
                                 <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
                             </div>
@@ -67,12 +61,33 @@
                 <div class="card-footer">
                     <button type="button" class="btn btn-secondary btn-sm" onclick="addRow('attributes-container')">Add Attribute</button>
                 </div>
-                   <!-- Hidden empty form for adding new rows -->
+                <!-- Hidden empty form -->
                 <div class="d-none empty-form">
-                    {{ attribute_formset.empty_form.as_p }}
+                    <div class="row align-items-center mb-2">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="{{ attribute_formset.empty_form.name.id_for_label }}">Field Name</label>
+                                {{ attribute_formset.empty_form.name }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="{{ attribute_formset.empty_form.type.id_for_label }}">Field Type</label>
+                                {{ attribute_formset.empty_form.type }}
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="{{ attribute_formset.empty_form.options.id_for_label }}">Options</label>
+                                {{ attribute_formset.empty_form.options }}
+                            </div>
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeRow(this)">Remove</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <!-- Relationships Section -->
             <h5>Relationships</h5>
             <div id="relationships-container" class="card mb-3">
